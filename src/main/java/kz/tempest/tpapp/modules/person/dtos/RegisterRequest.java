@@ -5,7 +5,7 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class PersonRequest {
+public class RegisterRequest {
     private Long id = 0L;
     private String email;
     private String password;

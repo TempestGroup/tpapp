@@ -1,15 +1,19 @@
 package kz.tempest.tpapp.modules.person.services;
 
-import kz.tempest.tpapp.commons.constants.ErrorMessages;
 import kz.tempest.tpapp.commons.dtos.ResponseMessage;
 import kz.tempest.tpapp.commons.enums.Language;
 import kz.tempest.tpapp.commons.exceptions.UserExistException;
 import kz.tempest.tpapp.commons.utils.LogUtil;
+import kz.tempest.tpapp.commons.utils.TokenUtil;
 import kz.tempest.tpapp.commons.utils.TranslateUtil;
-import kz.tempest.tpapp.modules.person.dtos.PersonRequest;
+import kz.tempest.tpapp.modules.person.constants.PersonMessages;
+import kz.tempest.tpapp.modules.person.dtos.LoginRequest;
+import kz.tempest.tpapp.modules.person.dtos.RegisterRequest;
 import kz.tempest.tpapp.modules.person.models.Person;
 import kz.tempest.tpapp.modules.person.repositories.PersonRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,23 +26,28 @@ public class PersonService implements UserDetailsService {
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public boolean register(PersonRequest personRequest, ResponseMessage message, Language language) throws IOException {
-        if (personRepository.findByEmail(personRequest.getEmail()).isPresent()) {
-            message.setContent(TranslateUtil.getMessage(ErrorMessages.USER_EXIST, language));
+    public Person login(LoginRequest loginRequest, AuthenticationManager authManager) {
+        return Person.getPerson(authManager
+                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())));
+    }
+
+    public boolean register(RegisterRequest registerRequest, ResponseMessage message, Language language) throws IOException {
+        if (personRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
+            message.setContent(TranslateUtil.getMessage(PersonMessages.USER_EXIST, language));
             LogUtil.write(new UserExistException());
             return false;
         }
         //emailService.send(ConstantsUtil.getHostName() + "/api/v1/auth/confirm/" + TokenUtil.getRefreshToken(createUserRequest.getUsername()), createUserRequest.getEmail());
         byte[] image = null;
-        if (personRequest.getImage() != null) {
-            image = personRequest.getImage().getBytes();
+        if (registerRequest.getImage() != null) {
+            image = registerRequest.getImage().getBytes();
         }
         personRepository.save(
             new Person(
-                personRequest.getEmail(),
-                passwordEncoder.encode(personRequest.getPassword()),
+                registerRequest.getEmail(),
+                passwordEncoder.encode(registerRequest.getPassword()),
                 image,
-                personRequest.isActive()
+                registerRequest.isActive()
             )
         );
         return true;
