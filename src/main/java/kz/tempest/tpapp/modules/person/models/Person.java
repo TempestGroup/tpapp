@@ -16,7 +16,7 @@ import java.util.List;
 
 @Data
 @Table(name = "persons")
-@Entity
+@Entity(name = "persons")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Person implements UserDetails {
