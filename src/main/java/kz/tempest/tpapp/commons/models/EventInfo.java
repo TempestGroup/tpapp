@@ -25,7 +25,7 @@ public class EventInfo {
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private EventType type;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "person_id")
     private Person person;
     @Column(name = "object_id")
