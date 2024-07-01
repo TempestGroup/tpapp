@@ -80,4 +80,30 @@ public class Person implements UserDetails {
     public static Person getPerson(Authentication auth) {
         return (Person) auth.getPrincipal();
     }
+
+    public boolean is(Role role) {
+        return roles.contains(role);
+    }
+
+    public boolean isAdmin() {
+        return is(Role.ADMIN);
+    }
+
+    public boolean isDeveloper() {
+        return is(Role.DEVELOPER);
+    }
+
+    public boolean isAnalyst() {
+        return is(Role.ANALYST);
+    }
+
+    public boolean isEmployee() {
+        return is(Role.EMPLOYEE);
+    }
+
+    public boolean isUser() {
+        return roles.contains(Role.USER);
+    }
+
+
 }

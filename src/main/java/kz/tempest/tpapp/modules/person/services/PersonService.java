@@ -1,6 +1,8 @@
 package kz.tempest.tpapp.modules.person.services;
 
+import kz.tempest.tpapp.commons.dtos.PageObject;
 import kz.tempest.tpapp.commons.dtos.ResponseMessage;
+import kz.tempest.tpapp.commons.dtos.SearchFilter;
 import kz.tempest.tpapp.commons.enums.Language;
 import kz.tempest.tpapp.commons.exceptions.UserExistException;
 import kz.tempest.tpapp.commons.utils.LogUtil;
@@ -8,12 +10,15 @@ import kz.tempest.tpapp.commons.utils.TokenUtil;
 import kz.tempest.tpapp.commons.utils.TranslateUtil;
 import kz.tempest.tpapp.modules.person.constants.PersonMessages;
 import kz.tempest.tpapp.modules.person.dtos.LoginRequest;
+import kz.tempest.tpapp.modules.person.dtos.PersonResponse;
 import kz.tempest.tpapp.modules.person.dtos.RegisterRequest;
 import kz.tempest.tpapp.modules.person.models.Person;
 import kz.tempest.tpapp.modules.person.repositories.PersonRepository;
+import kz.tempest.tpapp.modules.person.specifications.PersonSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -61,5 +66,11 @@ public class PersonService implements UserDetailsService {
             LogUtil.write(e);
             return null;
         }
+    }
+
+    public PageObject<PersonResponse> getPersons(SearchFilter filter, Person person, Language language) {
+        return new PageObject<>(personRepository.findAll(PersonSpecification
+                .getSpecification(person, filter.getFilter()), filter.getPageable(Person.class, language))
+                .map(pf -> PersonResponse.from(pf, language)));
     }
 }

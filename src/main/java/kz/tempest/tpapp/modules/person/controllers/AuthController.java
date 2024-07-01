@@ -1,11 +1,9 @@
 package kz.tempest.tpapp.modules.person.controllers;
 
-import kz.tempest.tpapp.commons.constants.CommonMessages;
 import kz.tempest.tpapp.commons.dtos.Response;
 import kz.tempest.tpapp.commons.dtos.ResponseMessage;
 import kz.tempest.tpapp.commons.enums.Language;
 import kz.tempest.tpapp.commons.enums.ResponseMessageStatus;
-import kz.tempest.tpapp.commons.utils.TokenUtil;
 import kz.tempest.tpapp.commons.utils.TranslateUtil;
 import kz.tempest.tpapp.modules.person.constants.PersonMessages;
 import kz.tempest.tpapp.modules.person.dtos.LoginRequest;
@@ -14,16 +12,12 @@ import kz.tempest.tpapp.modules.person.dtos.TokenResponse;
 import kz.tempest.tpapp.modules.person.models.Person;
 import kz.tempest.tpapp.modules.person.services.PersonService;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
 public class AuthController {
