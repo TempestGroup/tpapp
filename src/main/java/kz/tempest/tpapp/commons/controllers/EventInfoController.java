@@ -8,7 +8,6 @@ import kz.tempest.tpapp.commons.models.EventInfo;
 import kz.tempest.tpapp.commons.services.EventInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
