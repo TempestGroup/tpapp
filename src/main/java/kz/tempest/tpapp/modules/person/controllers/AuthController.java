@@ -28,7 +28,7 @@ public class AuthController {
     @ResponseBody
     @PostMapping("/login")
     @PreAuthorize("isAnonymous()")
-    public Response login(@RequestBody LoginRequest loginRequest, @RequestHeader(value = "Language", defaultValue = "ru") Language language){
+    public Response login(@RequestHeader(value = "Language", defaultValue = "ru") Language language, @RequestBody LoginRequest loginRequest){
         Response response = new Response();
         Person person = personService.login(loginRequest, authenticationManager);
         TokenResponse token = new TokenResponse(person);

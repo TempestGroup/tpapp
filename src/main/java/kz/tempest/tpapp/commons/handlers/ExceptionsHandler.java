@@ -26,14 +26,15 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class ExceptionsHandler {
 
     @ExceptionHandler(Exception.class)
     public static ResponseEntity<Response> handleExceptions (HttpServletRequest request, HttpServletResponse response, Exception exception) {
-        Language language = (StringUtil.isNotEmpty(request.getHeader("Current-Language")) && Language.contains(request.getHeader("Current-Language"))) ?
-                Language.valueOf(request.getHeader("Current-Language"))   :
+        Language language = (StringUtil.isNotEmpty(request.getHeader("Language")) && Language.contains(request.getHeader("Language"))) ?
+                Language.valueOf(request.getHeader("Language"))   :
                 Language.ru;
         ResponseMessage message;
         if (exception instanceof AccessDeniedException) {
@@ -66,6 +67,8 @@ public class ExceptionsHandler {
             message = new ResponseMessage(StringUtil.join(fieldErrors, "\n"), ResponseMessageStatus.ERROR);
         } else if (exception instanceof MethodArgumentTypeMismatchException) {
             message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.LANGUAGE_IS_NOT_EXIST, language), ResponseMessageStatus.ERROR);
+        } else if (exception instanceof NoSuchElementException) {
+            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.USER_NOT_FOUND, language), ResponseMessageStatus.ERROR);
         } else {
             message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.ERROR, language), ResponseMessageStatus.ERROR);
         }

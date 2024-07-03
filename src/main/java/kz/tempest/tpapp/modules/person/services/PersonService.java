@@ -36,8 +36,9 @@ public class PersonService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     public Person login(LoginRequest loginRequest, AuthenticationManager authManager) {
-        return Person.getPerson(authManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())));
+        Person person = loadUserByUsername(loginRequest.getUsername());
+        authManager.authenticate(new UsernamePasswordAuthenticationToken(person, loginRequest.getUsername(), person.getRoles()));
+        return person;
     }
 
     public boolean register(RegisterRequest registerRequest, ResponseMessage message, Language language, HttpServletRequest request) throws IOException {
@@ -66,7 +67,7 @@ public class PersonService implements UserDetailsService {
     @Override
     public Person loadUserByUsername(String username) {
         try {
-            return personRepository.findByEmail(username).orElse(null);
+            return personRepository.findByEmail(username).get();
         } catch (UsernameNotFoundException e) {
             LogUtil.write(e);
             return null;
