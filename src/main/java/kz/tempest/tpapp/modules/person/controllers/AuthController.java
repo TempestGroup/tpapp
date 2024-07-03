@@ -32,8 +32,7 @@ public class AuthController {
         Response response = new Response();
         Person person = personService.login(loginRequest, authenticationManager);
         TokenResponse token = new TokenResponse(person);
-        response.put("message", new ResponseMessage(TranslateUtil
-                .getMessage(PersonMessages.SUCCESSFULLY_LOGIN, language), ResponseMessageStatus.SUCCESS));
+        response.put("message", new ResponseMessage(TranslateUtil.getMessage(PersonMessages.SUCCESSFULLY_LOGIN, language), ResponseMessageStatus.SUCCESS));
         response.put("token", token);
         return response;
     }
