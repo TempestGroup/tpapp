@@ -35,7 +35,7 @@ public class TokenFilter extends OncePerRequestFilter {
         }
         if (!token.isEmpty() && TokenUtil.validateToken(token)) {
             Person person = parse(token);
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(person, person.getEmail(), person.getRoles()));
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(person, person.getUsername(), person.getRoles()));
         }
         filterChain.doFilter(request, response);
     }
