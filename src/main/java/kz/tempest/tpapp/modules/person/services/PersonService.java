@@ -10,7 +10,6 @@ import kz.tempest.tpapp.commons.enums.Module;
 import kz.tempest.tpapp.commons.exceptions.UserExistException;
 import kz.tempest.tpapp.commons.utils.EventUtil;
 import kz.tempest.tpapp.commons.utils.LogUtil;
-import kz.tempest.tpapp.commons.utils.TokenUtil;
 import kz.tempest.tpapp.commons.utils.TranslateUtil;
 import kz.tempest.tpapp.modules.person.constants.PersonMessages;
 import kz.tempest.tpapp.modules.person.dtos.LoginRequest;
@@ -22,7 +21,6 @@ import kz.tempest.tpapp.modules.person.specifications.PersonSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -66,12 +64,7 @@ public class PersonService implements UserDetailsService {
 
     @Override
     public Person loadUserByUsername(String username) {
-        try {
-            return personRepository.findByEmail(username).get();
-        } catch (UsernameNotFoundException e) {
-            LogUtil.write(e);
-            return null;
-        }
+        return personRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Not found user with '" + username + "'!"));
     }
 
     public PageObject<PersonResponse> getPersons(SearchFilter filter, Person person, Language language) {
