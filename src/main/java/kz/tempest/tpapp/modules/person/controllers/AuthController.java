@@ -1,5 +1,6 @@
 package kz.tempest.tpapp.modules.person.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import kz.tempest.tpapp.commons.dtos.Response;
 import kz.tempest.tpapp.commons.dtos.ResponseMessage;
 import kz.tempest.tpapp.commons.enums.Language;
@@ -40,9 +41,9 @@ public class AuthController {
     @ResponseBody
     @PostMapping("/register")
     @PreAuthorize("isAnonymous()")
-    public Response register(@RequestBody RegisterRequest registerRequest, @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language) throws IOException {
+    public Response register(HttpServletRequest request, @RequestBody RegisterRequest registerRequest, @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language) throws IOException {
         ResponseMessage message = new ResponseMessage();
-        if (personService.register(registerRequest, message, language)) {
+        if (personService.register(registerRequest, message, language, request)) {
             return Response.getResponse("message", message);
         }
         return Response.getResponse("message", new ResponseMessage(TranslateUtil

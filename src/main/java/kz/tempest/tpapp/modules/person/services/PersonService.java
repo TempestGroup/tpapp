@@ -1,10 +1,14 @@
 package kz.tempest.tpapp.modules.person.services;
 
+import jakarta.servlet.http.HttpServletRequest;
 import kz.tempest.tpapp.commons.dtos.PageObject;
 import kz.tempest.tpapp.commons.dtos.ResponseMessage;
 import kz.tempest.tpapp.commons.dtos.SearchFilter;
+import kz.tempest.tpapp.commons.enums.EventType;
 import kz.tempest.tpapp.commons.enums.Language;
+import kz.tempest.tpapp.commons.enums.Module;
 import kz.tempest.tpapp.commons.exceptions.UserExistException;
+import kz.tempest.tpapp.commons.utils.EventUtil;
 import kz.tempest.tpapp.commons.utils.LogUtil;
 import kz.tempest.tpapp.commons.utils.TokenUtil;
 import kz.tempest.tpapp.commons.utils.TranslateUtil;
@@ -36,7 +40,7 @@ public class PersonService implements UserDetailsService {
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())));
     }
 
-    public boolean register(RegisterRequest registerRequest, ResponseMessage message, Language language) throws IOException {
+    public boolean register(RegisterRequest registerRequest, ResponseMessage message, Language language, HttpServletRequest request) throws IOException {
         if (personRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
             message.setContent(TranslateUtil.getMessage(PersonMessages.USER_EXIST, language));
             LogUtil.write(new UserExistException());
@@ -47,7 +51,7 @@ public class PersonService implements UserDetailsService {
         if (registerRequest.getImage() != null) {
             image = registerRequest.getImage().getBytes();
         }
-        personRepository.save(
+        Person person = personRepository.save(
             new Person(
                 registerRequest.getEmail(),
                 passwordEncoder.encode(registerRequest.getPassword()),
@@ -55,6 +59,7 @@ public class PersonService implements UserDetailsService {
                 registerRequest.isActive()
             )
         );
+        EventUtil.register(Module.PERSON, EventType.CREATE, person.getId(), request, PersonMessages.REGISTERED_NEW_PERSON, person.getUsername(), person.getId());
         return true;
     }
 
@@ -71,6 +76,6 @@ public class PersonService implements UserDetailsService {
     public PageObject<PersonResponse> getPersons(SearchFilter filter, Person person, Language language) {
         return new PageObject<>(personRepository.findAll(PersonSpecification
                 .getSpecification(person, filter.getFilter()), filter.getPageable(Person.class, language))
-                .map(pf -> PersonResponse.from(pf, language)));
+                .map(p -> PersonResponse.from(p, language)));
     }
 }

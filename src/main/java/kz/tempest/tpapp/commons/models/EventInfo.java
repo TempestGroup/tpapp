@@ -1,14 +1,19 @@
 package kz.tempest.tpapp.commons.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import kz.tempest.tpapp.commons.enums.EventType;
 import kz.tempest.tpapp.commons.enums.Language;
 import kz.tempest.tpapp.commons.enums.Module;
 import kz.tempest.tpapp.commons.utils.ClassUtil;
+import kz.tempest.tpapp.commons.utils.TranslateUtil;
 import kz.tempest.tpapp.modules.person.models.Person;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Data
 @Table(name = "event_infos")
@@ -19,14 +24,17 @@ public class EventInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @JsonIgnore
     @Column(name = "module")
     @Enumerated(EnumType.STRING)
     private Module module;
+    @JsonIgnore
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private EventType type;
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "person_id")
+    @JoinColumn(name = "person_id", nullable = true)
     private Person person;
     @Column(name = "object_id")
     private Long objectID;
@@ -36,6 +44,21 @@ public class EventInfo {
     private String contentRU;
     @Column(name = "content_en", columnDefinition = "TEXT")
     private String contentEN;
+    @Column(name = "host")
+    private String host;
+    @Column(name = "time")
+    private LocalDateTime time = LocalDateTime.now(ZoneId.of("Asia/Almaty"));
+
+    public EventInfo (Module module, EventType type, Person person, Long objectID, String contentKK, String contentRU, String contentEN, String host) {
+        this.module = module;
+        this.type = type;
+        this.person = person;
+        this.objectID = objectID;
+        this.contentKK = contentKK;
+        this.contentRU = contentRU;
+        this.contentEN = contentEN;
+        this.host = host;
+    }
 
     public String getContent(Language language) {
         return (String) ClassUtil.getLocalizedFieldValue(getClass(), this, "content", language);
