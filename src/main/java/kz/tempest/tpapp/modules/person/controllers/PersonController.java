@@ -20,7 +20,7 @@ public class PersonController {
     @ResponseBody
     @PostMapping("/")
     @PreAuthorize("isAuthenticated()")
-    public Response getPersons(Authentication auth, @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language, @RequestBody SearchFilter searchFilter) {
+    public Response getPersons(Authentication auth, @RequestHeader(value = "Language", defaultValue = "ru") Language language, @RequestBody SearchFilter searchFilter) {
         return Response.getResponse("persons", personService.getPersons(searchFilter, Person.getPerson(auth), language));
     }
 }

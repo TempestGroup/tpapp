@@ -28,7 +28,7 @@ public class AuthController {
     @ResponseBody
     @PostMapping("/login")
     @PreAuthorize("isAnonymous()")
-    public Response login(@RequestBody LoginRequest loginRequest, @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language){
+    public Response login(@RequestBody LoginRequest loginRequest, @RequestHeader(value = "Language", defaultValue = "ru") Language language){
         Response response = new Response();
         Person person = personService.login(loginRequest, authenticationManager);
         TokenResponse token = new TokenResponse(person);
@@ -41,7 +41,7 @@ public class AuthController {
     @ResponseBody
     @PostMapping("/register")
     @PreAuthorize("isAnonymous()")
-    public Response register(HttpServletRequest request, @RequestBody RegisterRequest registerRequest, @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language) throws IOException {
+    public Response register(HttpServletRequest request, @RequestBody RegisterRequest registerRequest, @RequestHeader(value = "Language", defaultValue = "ru") Language language) throws IOException {
         ResponseMessage message = new ResponseMessage();
         if (personService.register(registerRequest, message, language, request)) {
             return Response.getResponse("message", message);

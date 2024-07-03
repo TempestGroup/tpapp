@@ -19,14 +19,14 @@ public class EventInfoController {
     @ResponseBody
     @PostMapping("/")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public Response getEvents(@RequestHeader(value = "Current-Language", defaultValue = "ru") Language language, @RequestBody SearchFilter searchFilter) {
+    public Response getEvents(@RequestHeader(value = "Language", defaultValue = "ru") Language language, @RequestBody SearchFilter searchFilter) {
         return Response.getResponse("events", eventInfoService.getEvents(searchFilter, language));
     }
 
     @ResponseBody
     @GetMapping("/{eventID}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public Response getEventByID(@RequestHeader(value = "Current-Language", defaultValue = "ru") Language language, @PathVariable("eventID") EventInfo eventInfo) {
+    public Response getEventByID(@RequestHeader(value = "Language", defaultValue = "ru") Language language, @PathVariable("eventID") EventInfo eventInfo) {
         return Response.getResponse("event", EventInfoResponse.from(eventInfo, language));
     }
 }
