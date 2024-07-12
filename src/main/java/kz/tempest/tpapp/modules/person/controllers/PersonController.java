@@ -4,6 +4,7 @@ import kz.tempest.tpapp.commons.dtos.Response;
 import kz.tempest.tpapp.commons.dtos.SearchFilter;
 import kz.tempest.tpapp.commons.enums.Language;
 import kz.tempest.tpapp.modules.person.dtos.LoginRequest;
+import kz.tempest.tpapp.modules.person.dtos.PersonResponse;
 import kz.tempest.tpapp.modules.person.models.Person;
 import kz.tempest.tpapp.modules.person.services.PersonService;
 import lombok.RequiredArgsConstructor;
@@ -22,5 +23,12 @@ public class PersonController {
     @PreAuthorize("isAuthenticated()")
     public Response getPersons(Authentication auth, @RequestHeader(value = "Language", defaultValue = "ru") Language language, @RequestBody SearchFilter searchFilter) {
         return Response.getResponse("persons", personService.getPersons(searchFilter, Person.getPerson(auth), language));
+    }
+
+    @ResponseBody
+    @GetMapping("/{personID}")
+    @PreAuthorize("isAuthenticated()")
+    public Response getPerson(@PathVariable("personID") Person person, @RequestHeader(value = "Language", defaultValue = "ru") Language language) {
+        return Response.getResponse("person", PersonResponse.from(person, language));
     }
 }

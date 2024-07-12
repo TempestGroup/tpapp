@@ -19,13 +19,13 @@ public class PersonResponse {
     private String image;
     private boolean active;
 
-    public static PersonResponse from(Person user, Language language) {
-        PersonResponse userResponse = new PersonResponse();
-        userResponse.id = user.getId();
-        userResponse.email = user.getEmail();
-        userResponse.roles = user.getRoles().stream().map((role) -> role.getName(language)).toList();
-        userResponse.image = "/api/v1/auth/images/" + user.getId();
-        userResponse.active = user.isActive();
-        return userResponse;
+    public static PersonResponse from(Person person, Language language) {
+        PersonResponse personResponse = new PersonResponse();
+        personResponse.id = person.getId();
+        personResponse.email = person.getEmail();
+        personResponse.roles = person.getRoles().stream().map((role) -> role.getName(language)).toList();
+        personResponse.image = "/api/v1/auth/images/" + person.getId();
+        personResponse.active = person.isActive();
+        return personResponse;
     }
 }
