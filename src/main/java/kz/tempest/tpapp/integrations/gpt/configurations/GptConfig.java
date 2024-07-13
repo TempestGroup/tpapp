@@ -3,6 +3,7 @@ package kz.tempest.tpapp.integrations.gpt.configurations;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,8 +33,8 @@ public class GptConfig {
 
     public HttpHeaders getHeaders() {
         return new HttpHeaders() {{
-            set("Content-Type", "application/json");
-            set("Authorization", "Bearer " + apiKey);
+            set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+            set(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey);
         }};
     }
 
