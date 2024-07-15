@@ -24,13 +24,10 @@ public class SettingService {
     public static Map<String, Setting> settings = new HashMap<>();
 
     private static void initMap() {
+        // Clear map
         settings.clear();
-        settings.put(LIMIT_SPACE_DISK, new Setting(
-                LIMIT_SPACE_DISK,
-                "Дискілік кеңістікті шектеуі",
-                "Ограничить дисковое пространство",
-                "Limit disk space",
-                4));
+        // Init map
+        settings.put(LIMIT_SPACE_DISK, new Setting(LIMIT_SPACE_DISK, "Дискілік кеңістікті шектеуі", "Ограничить дисковое пространство", "Limit disk space", 4));
     }
 
     public static void initDB() {
