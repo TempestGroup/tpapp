@@ -61,7 +61,7 @@ public class SettingService {
 
     public static boolean setSettingValue(Setting setting) {
         String sql = "INSERT INTO settings(key, value, type, name_kk, name_ru, name_en) VALUES ('" + setting.getKey() + "', '" +
-                setting.getValue() + "', '" + setting.getType() + "', '" + setting.getNameKK() + "', '" + setting.getNameRU() + "', '" +
+                setting.getValue() + "', '" + setting.getType().name() + "', '" + setting.getNameKK() + "', '" + setting.getNameRU() + "', '" +
                 setting.getNameEN() + "') ON DUPLICATE KEY UPDATE value = VALUES(value), type = VALUES(type), name_kk = VALUES(name_kk), " +
                 " name_ru = VALUES(name_ru), name_en = VALUES(name_en)";
         jdbcTemplate.execute(sql);
