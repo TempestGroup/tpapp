@@ -41,7 +41,7 @@ public class SettingService {
     }
 
     public static Object getSettingValue(String key) {
-        return getValue(jdbcTemplate.query("SELECT * FROM settings WHERE key = ?", SettingService::mapRowToSetting, key));
+        return getValue(Objects.requireNonNull(jdbcTemplate.query("SELECT * FROM settings WHERE key = ?", SettingService::mapRowToSetting, key)));
     }
 
     public static List<Setting> getSettings(List<String> keys) {
