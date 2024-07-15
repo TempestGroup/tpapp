@@ -41,41 +41,35 @@ public class SettingService {
     }
 
     public static Object getSettingValue(String key) {
-        String sql = "SELECT * FROM settings WHERE key = ?";
-        Setting setting = jdbcTemplate.query(sql, SettingService::mapRowToSetting, key);
-        return setting == null ? null : getValue(Objects.requireNonNull(setting));
+        return getValue(jdbcTemplate.query("SELECT * FROM settings WHERE key = ?", SettingService::mapRowToSetting, key));
     }
 
     public static List<Setting> getSettings(List<String> keys) {
-        String sql = "SELECT * FROM settings WHERE key IN (" + StringUtil.join(keys.stream().map(key -> "'" + key + "'").toList(), ", ") + ")";
-        return jdbcTemplate.query(sql, SettingService::mapRowToSettingList);
+        return jdbcTemplate.query("SELECT * FROM settings WHERE key IN (" + StringUtil.join(keys.stream().map(key -> "'" + key + "'").toList(), ", ") + ")",
+                SettingService::mapRowToSettingList);
     }
 
     public static List<Setting> getSettings() {
         return getSettings(settings.keySet().stream().toList());
     }
 
-    public static boolean setSettingValue(String key, String nameKK, String nameRU, String nameEN, Object value) {
-        return setSettingValue(new Setting(key, nameKK, nameRU, nameEN, value));
+    public static void setSettingValue(String key, String nameKK, String nameRU, String nameEN, Object value) {
+        setSettingValue(new Setting(key, nameKK, nameRU, nameEN, value));
     }
 
-    public static boolean setSettingValue(Setting setting) {
-        String sql = "INSERT INTO settings(key, value, type, name_kk, name_ru, name_en) VALUES ('" + setting.getKey() + "', '" +
+    public static void setSettingValue(Setting setting) {
+        jdbcTemplate.execute("INSERT INTO settings(key, value, type, name_kk, name_ru, name_en) VALUES ('" + setting.getKey() + "', '" +
                 setting.getValue() + "', '" + setting.getType().name() + "', '" + setting.getNameKK() + "', '" + setting.getNameRU() + "', '" +
                 setting.getNameEN() + "') ON DUPLICATE KEY UPDATE value = VALUES(value), type = VALUES(type), name_kk = VALUES(name_kk), " +
-                " name_ru = VALUES(name_ru), name_en = VALUES(name_en)";
-        jdbcTemplate.execute(sql);
+                " name_ru = VALUES(name_ru), name_en = VALUES(name_en)");
         setInMap(setting);
-        return true;
     }
 
-    public static boolean setSettings(List<SettingResponse> settings) {
-        boolean res = false;
+    public static void setSettings(List<SettingResponse> settings) {
         for (SettingResponse setting : settings) {
-            res = setSettingValue(setting.getKey(), setting.getNameKK(), setting.getNameRU(),
+            setSettingValue(setting.getKey(), setting.getNameKK(), setting.getNameRU(),
                     setting.getNameEN(), setting.getValue());
         }
-        return res;
     }
 
     private static void setInMap(Setting setting) {
@@ -83,23 +77,16 @@ public class SettingService {
     }
 
     private static Setting mapRowToSetting(ResultSet rs) throws SQLException {
-        if (rs.next()) {
-            return new Setting(rs.getString("key"),
-                    rs.getString("name_kk"),
-                    rs.getString("name_ru"),
-                    rs.getString("name_en"),
-                    rs.getString("value"), SettingType.valueOf(rs.getString("type")));
-        }
-        return null;
+        return rs.next() ? new Setting(rs.getString("key"), rs.getString("name_kk"),
+                rs.getString("name_ru"), rs.getString("name_en"),
+                rs.getString("value"), SettingType.valueOf(rs.getString("type"))) : null;
     }
 
     private static List<Setting> mapRowToSettingList(ResultSet rs) throws SQLException {
         List<Setting> settings = new ArrayList<>();
         while (rs.next()) {
-            settings.add(new Setting(rs.getString("key"),
-                    rs.getString("name_kk"),
-                    rs.getString("name_ru"),
-                    rs.getString("name_en"),
+            settings.add(new Setting(rs.getString("key"), rs.getString("name_kk"),
+                    rs.getString("name_ru"), rs.getString("name_en"),
                     rs.getString("value"), SettingType.valueOf(rs.getString("type"))));
         }
         return settings;
@@ -109,7 +96,7 @@ public class SettingService {
         return getValue(setting.getValue(), setting.getType());
     }
 
-    public static Object getValue(String value, SettingType type) {
+    private static Object getValue(String value, SettingType type) {
         if (type.equals(SettingType.INTEGER)) {
             return Integer.parseInt(value);
         } else if (type.equals(SettingType.DOUBLE)) {
