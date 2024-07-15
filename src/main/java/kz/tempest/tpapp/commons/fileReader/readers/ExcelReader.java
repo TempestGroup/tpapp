@@ -1,6 +1,7 @@
 package kz.tempest.tpapp.commons.fileReader.readers;
 
 import kz.tempest.tpapp.commons.fileReader.Reader;
+import kz.tempest.tpapp.commons.utils.LogUtil;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.ByteArrayInputStream;
@@ -11,7 +12,6 @@ public class ExcelReader extends Reader {
     @Override
     public Map<String,List<List<String>>> read(byte[] fileBytes) {
         Map<String,List<List<String>>> sheets = new HashMap<>();
-
         try (Workbook workbook = new XSSFWorkbook(new ByteArrayInputStream(fileBytes))) {
             for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
                 List<List<String>> sheetData = new ArrayList<>();
@@ -29,7 +29,7 @@ public class ExcelReader extends Reader {
                 sheets.put(sheet.getSheetName(), sheetData);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.write(e);
         }
         return sheets;
     }

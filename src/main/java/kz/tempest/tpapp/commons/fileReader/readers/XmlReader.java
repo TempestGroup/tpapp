@@ -1,6 +1,7 @@
 package kz.tempest.tpapp.commons.fileReader.readers;
 
 import kz.tempest.tpapp.commons.fileReader.Reader;
+import kz.tempest.tpapp.commons.utils.LogUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -23,7 +24,7 @@ public class XmlReader extends Reader {
             doc.getDocumentElement().normalize();
             return processNode(doc.getDocumentElement());
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.write(e);
             return null;
         }
     }

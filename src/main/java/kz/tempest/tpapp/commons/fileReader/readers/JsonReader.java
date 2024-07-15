@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import kz.tempest.tpapp.commons.fileReader.Reader;
+import kz.tempest.tpapp.commons.utils.LogUtil;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +24,7 @@ public class JsonReader extends Reader {
             JsonParser parser = factory.createParser(inputStream);
             return processNode(parser);
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.write(e);
             return null;
         }
     }

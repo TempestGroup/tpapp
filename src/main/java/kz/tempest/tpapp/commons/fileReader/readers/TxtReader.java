@@ -1,6 +1,8 @@
 package kz.tempest.tpapp.commons.fileReader.readers;
 
 import kz.tempest.tpapp.commons.fileReader.Reader;
+import kz.tempest.tpapp.commons.utils.LogUtil;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -20,7 +22,7 @@ public class TxtReader extends Reader {
                 fileData.add(rowData);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.write(e);
         }
         return fileData;
     }

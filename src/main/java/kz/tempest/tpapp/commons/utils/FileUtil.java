@@ -25,11 +25,17 @@ public class FileUtil {
 
     @SneakyThrows
     public static byte[] getBytes(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return null;
+        }
         return file.getBytes();
     }
 
     @SneakyThrows
     public static byte[] getBytes(File file) {
+        if (file == null || !file.exists()) {
+            return null;
+        }
         return Files.readAllBytes(file.toPath());
     }
 
