@@ -17,9 +17,9 @@ import java.util.List;
 public class JsonReader extends Reader {
 
     @Override
-    public Serializable read(byte[] fileBytes) {
+    public Serializable read() {
         try {
-            InputStream inputStream = new ByteArrayInputStream(fileBytes);
+            InputStream inputStream = new ByteArrayInputStream(bytes);
             JsonFactory factory = new JsonFactory();
             JsonParser parser = factory.createParser(inputStream);
             return processNode(parser);

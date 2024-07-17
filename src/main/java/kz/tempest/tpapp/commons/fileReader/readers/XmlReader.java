@@ -16,11 +16,11 @@ import java.util.List;
 
 public class XmlReader extends Reader {
     @Override
-    public Serializable read(byte[] fileBytes) {
+    public Serializable read() {
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(new ByteArrayInputStream(fileBytes));
+            Document doc = dBuilder.parse(new ByteArrayInputStream(bytes));
             doc.getDocumentElement().normalize();
             return processNode(doc.getDocumentElement());
         } catch (Exception e) {

@@ -12,9 +12,9 @@ import java.util.List;
 
 public class TxtReader extends Reader {
     @Override
-    public List<List<String>> read(byte[] fileBytes) {
+    public List<List<String>> read() {
         List<List<String>> fileData = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(fileBytes)))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 List<String> rowData = new ArrayList<>();

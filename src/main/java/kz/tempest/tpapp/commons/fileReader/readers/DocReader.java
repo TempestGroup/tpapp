@@ -14,13 +14,13 @@ import java.util.List;
 
 public class DocReader extends Reader {
     @Override
-    public List<String> read(byte[] fileBytes) {
+    public List<String> read() {
         List<String> paragraphs = new ArrayList<>();
         Tika tika = new Tika();
         String fileType;
         try {
-            fileType = tika.detect(fileBytes);
-            try (ByteArrayInputStream bais = new ByteArrayInputStream(fileBytes)) {
+            fileType = tika.detect(bytes);
+            try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes)) {
                 if ("application/msword".equals(fileType)) {
                     try (HWPFDocument doc = new HWPFDocument(bais)) {
                         WordExtractor extractor = new WordExtractor(doc);

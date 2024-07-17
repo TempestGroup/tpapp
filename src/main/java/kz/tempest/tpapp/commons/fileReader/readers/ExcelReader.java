@@ -10,9 +10,9 @@ import java.util.*;
 
 public class ExcelReader extends Reader {
     @Override
-    public Map<String,List<List<String>>> read(byte[] fileBytes) {
+    public Map<String,List<List<String>>> read() {
         Map<String,List<List<String>>> sheets = new HashMap<>();
-        try (Workbook workbook = new XSSFWorkbook(new ByteArrayInputStream(fileBytes))) {
+        try (Workbook workbook = new XSSFWorkbook(new ByteArrayInputStream(bytes))) {
             for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
                 List<List<String>> sheetData = new ArrayList<>();
                 Sheet sheet = workbook.getSheetAt(i);
