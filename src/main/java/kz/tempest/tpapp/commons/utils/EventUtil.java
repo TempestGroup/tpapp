@@ -3,17 +3,19 @@ package kz.tempest.tpapp.commons.utils;
 import jakarta.servlet.http.HttpServletRequest;
 import kz.tempest.tpapp.commons.enums.EventType;
 import kz.tempest.tpapp.commons.enums.Language;
-import kz.tempest.tpapp.commons.enums.Module;
 import kz.tempest.tpapp.commons.models.EventInfo;
+import kz.tempest.tpapp.commons.enums.Module;
 import kz.tempest.tpapp.commons.services.EventInfoService;
 import kz.tempest.tpapp.modules.person.models.Person;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class EventUtil {
+
+    public EventUtil (EventInfoService eventInfoService) {
+        EventUtil.eventInfoService = eventInfoService;
+    }
     private static EventInfoService eventInfoService;
 
     public static void register(Module module, EventType type, Long objectID, HttpServletRequest request, String code, Object... arguments) {

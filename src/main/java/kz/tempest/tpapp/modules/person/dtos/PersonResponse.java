@@ -21,10 +21,10 @@ public class PersonResponse {
 
     public static PersonResponse from(Person person, Language language) {
         PersonResponse personResponse = new PersonResponse();
-        personResponse.id = person.getId();
+        personResponse.id = person.getID();
         personResponse.email = person.getEmail();
         personResponse.roles = person.getRoles().stream().map((role) -> role.getName(language)).toList();
-        personResponse.image = "/api/v1/auth/images/" + person.getId();
+        personResponse.image = "/api/v1/auth/images/" + person.getID();
         personResponse.active = person.isActive();
         return personResponse;
     }

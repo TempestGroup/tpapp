@@ -6,12 +6,8 @@ import kz.tempest.tpapp.commons.enums.EventType;
 import kz.tempest.tpapp.commons.enums.Module;
 import kz.tempest.tpapp.commons.models.EventInfo;
 import kz.tempest.tpapp.commons.utils.StringUtil;
-import kz.tempest.tpapp.modules.person.enums.Role;
-import kz.tempest.tpapp.modules.person.models.Person;
 import org.springframework.data.jpa.domain.Specification;
-
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 public class EventInfoSpecification {

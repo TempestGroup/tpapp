@@ -2,6 +2,8 @@ package kz.tempest.tpapp.modules.person.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import kz.tempest.tpapp.commons.enums.Right;
+import kz.tempest.tpapp.commons.models.MenuItem;
 import kz.tempest.tpapp.modules.person.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,9 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+
+import java.util.*;
 
 @Data
 @Table(name = "persons")
@@ -22,7 +23,7 @@ import java.util.List;
 public class Person implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long ID;
     @Column(name = "email")
     private String email;
     @JsonIgnore
@@ -39,6 +40,15 @@ public class Person implements UserDetails {
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "person_roles", joinColumns = @JoinColumn(name = "person_id"))
     private List<Role> roles = new ArrayList<>();
+
+    @JsonIgnore
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "person_menu_items", joinColumns = @JoinColumn(name = "person_id"))
+    @MapKeyJoinColumn(name = "menu_item_id")
+    @Column(name = "`right`")
+    @Enumerated(EnumType.STRING)
+    private Map<MenuItem, Right> personMenuItems = new HashMap<>();
+
 
     public Person (String email, String password, byte[] image, boolean active) {
         this.email = email;

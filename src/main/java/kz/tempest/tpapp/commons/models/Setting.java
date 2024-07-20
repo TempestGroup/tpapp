@@ -18,8 +18,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Setting {
-    @Id @Column(name = "key", columnDefinition = "TEXT")
-    private String key;
+    @Id @Column(name = "code", length = 255)
+    private String code;
     @Column(name = "name_kk")
     private String nameKK;
     @Column(name = "name_ru")
@@ -29,10 +29,11 @@ public class Setting {
     @Column(name = "value", columnDefinition = "TEXT")
     private String value;
     @Enumerated(EnumType.STRING)
+    @Column(name = "type")
     private SettingType type;
 
-    public Setting(String key, String nameKK, String nameRU, String nameEN, Object value) {
-        this.key = key;
+    public Setting(String code, String nameKK, String nameRU, String nameEN, Object value) {
+        this.code = code;
         this.nameKK = nameKK;
         this.nameRU = nameRU;
         this.nameEN = nameEN;

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CityResponse {
-    private Long id;
+    private Long ID;
     private String name;
     private String nameKK;
     private String nameRU;
@@ -18,7 +18,7 @@ public class CityResponse {
     private CountryResponse country;
 
     public static CityResponse from(City city, Language language) {
-        return new CityResponse(city.getId(), city.getName(language), city.getNameKK(), city.getNameRU(),
+        return new CityResponse(city.getID(), city.getName(language), city.getNameKK(), city.getNameRU(),
                 city.getNameEN(), CountryResponse.from(city.getCountry(), language));
     }
 }

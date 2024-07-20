@@ -16,32 +16,26 @@ import java.util.Base64;
 public class IFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long ID;
     @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "format", nullable = false)
     private String format;
     @JsonIgnore
-    @Column(name = "file", columnDefinition = "TEXT", nullable = false)
-    private String file;
+    @Lob
+    @Column(name = "file", columnDefinition = "LONGBLOB", nullable = false)
+    private byte[] file;
 
     public IFile(String name, String format, byte[] file) {
         this.name = name;
         this.format = format;
-        this.file = Base64.getEncoder().encodeToString(file);
+        this.file = file;
     }
 
     public IFile(String name, byte[] file) {
         this.name = name;
         this.format = FileUtil.getFileFormat(name);
-        this.file = Base64.getEncoder().encodeToString(file);
+        this.file = file;
     }
 
-    public byte[] getFile() {
-        return Base64.getDecoder().decode(file);
-    }
-
-    public void setFile(byte[] file) {
-        this.file = Base64.getEncoder().encodeToString(file);
-    }
 }

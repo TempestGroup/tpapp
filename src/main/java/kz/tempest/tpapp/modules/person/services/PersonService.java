@@ -58,7 +58,7 @@ public class PersonService implements UserDetailsService {
                 registerRequest.isActive()
             )
         );
-        EventUtil.register(Module.PERSON, EventType.CREATE, person.getId(), request, PersonMessages.REGISTERED_NEW_PERSON, person.getUsername(), person.getId());
+        EventUtil.register(Module.PERSON, EventType.CREATE, person.getID(), request, PersonMessages.REGISTERED_NEW_PERSON, person.getUsername(), person.getID());
         return true;
     }
 

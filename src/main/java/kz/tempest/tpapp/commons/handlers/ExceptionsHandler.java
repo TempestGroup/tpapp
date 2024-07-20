@@ -6,7 +6,8 @@ import kz.tempest.tpapp.commons.constants.CommonMessages;
 import kz.tempest.tpapp.commons.dtos.Response;
 import kz.tempest.tpapp.commons.dtos.ResponseMessage;
 import kz.tempest.tpapp.commons.enums.Language;
-import kz.tempest.tpapp.commons.enums.ResponseMessageStatus;
+import kz.tempest.tpapp.commons.enums.RMStatus;
+import kz.tempest.tpapp.commons.utils.LogUtil;
 import kz.tempest.tpapp.commons.utils.StringUtil;
 import kz.tempest.tpapp.commons.utils.TranslateUtil;
 import org.springframework.http.ResponseEntity;
@@ -38,40 +39,41 @@ public class ExceptionsHandler {
                 Language.ru;
         ResponseMessage message;
         if (exception instanceof AccessDeniedException) {
-            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.ACCESS_DENIED, language), ResponseMessageStatus.ERROR);
+            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.ACCESS_DENIED, language), RMStatus.ERROR);
         } else if (exception instanceof DisabledException) {
-            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.USER_IS_DISABLED, language), ResponseMessageStatus.ERROR);
+            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.USER_IS_DISABLED, language), RMStatus.ERROR);
         } else if (exception instanceof BadCredentialsException) {
-            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.USERNAME_OR_PASSWORD_IS_WRONG, language), ResponseMessageStatus.ERROR);
+            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.USERNAME_OR_PASSWORD_IS_WRONG, language), RMStatus.ERROR);
         } else if (exception instanceof MissingPathVariableException) {
-            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.ENTITY_IS_NOT_FOUND, language), ResponseMessageStatus.ERROR);
+            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.ENTITY_IS_NOT_FOUND, language), RMStatus.ERROR);
         } else if (exception instanceof NullPointerException) {
             if (exception.getMessage().contains(Authentication.class.getName())) {
-                message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.FAILED_AUTHENTICATION, language), ResponseMessageStatus.ERROR);
+                message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.FAILED_AUTHENTICATION, language), RMStatus.ERROR);
             } else {
-                message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.NULL_POINTER, language), ResponseMessageStatus.ERROR);
+                message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.NULL_POINTER, language), RMStatus.ERROR);
             }
         } else if (exception instanceof NoResourceFoundException) {
-            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.NO_RESOURCES_FOUND, language), ResponseMessageStatus.ERROR);
+            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.NO_RESOURCES_FOUND, language), RMStatus.ERROR);
         } else if (exception instanceof HttpMessageNotReadableException) {
-            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.CANNOT_PARSE_DATA, language), ResponseMessageStatus.ERROR);
+            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.CANNOT_PARSE_DATA, language), RMStatus.ERROR);
         } else if (exception instanceof MissingRequestHeaderException) {
-            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.MISSING_REQUEST_HEADER, language), ResponseMessageStatus.ERROR);
+            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.MISSING_REQUEST_HEADER, language), RMStatus.ERROR);
         } else if (exception instanceof UsernameNotFoundException) {
-            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.USER_NOT_FOUND, language), ResponseMessageStatus.ERROR);
+            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.USER_NOT_FOUND, language), RMStatus.ERROR);
         } else if (exception instanceof InternalAuthenticationServiceException) {
-            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.USER_IS_NOT_EXIST, language), ResponseMessageStatus.ERROR);
+            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.USER_IS_NOT_EXIST, language), RMStatus.ERROR);
         } else if (exception instanceof MethodArgumentNotValidException methodArgumentNotValidException) {
             List<String> fieldErrors = new ArrayList<>();
             methodArgumentNotValidException.getBindingResult().getFieldErrors().forEach(fieldError -> fieldErrors.add(TranslateUtil.getMessage(fieldError.getDefaultMessage(), language)));
-            message = new ResponseMessage(StringUtil.join(fieldErrors, "\n"), ResponseMessageStatus.ERROR);
+            message = new ResponseMessage(StringUtil.join(fieldErrors, "\n"), RMStatus.ERROR);
         } else if (exception instanceof MethodArgumentTypeMismatchException) {
-            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.LANGUAGE_IS_NOT_EXIST, language), ResponseMessageStatus.ERROR);
+            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.LANGUAGE_IS_NOT_EXIST, language), RMStatus.ERROR);
         } else if (exception instanceof NoSuchElementException) {
-            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.USER_NOT_FOUND, language), ResponseMessageStatus.ERROR);
+            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.USER_NOT_FOUND, language), RMStatus.ERROR);
         } else {
-            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.ERROR, language), ResponseMessageStatus.ERROR);
+            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.ERROR, language), RMStatus.ERROR);
         }
+        LogUtil.write(exception);
         return ResponseEntity.badRequest().body(Response.getResponse("message", message));
     }
 

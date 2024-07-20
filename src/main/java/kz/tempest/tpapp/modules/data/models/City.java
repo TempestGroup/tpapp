@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class City {
     @Id
-    private Long id;
+    private Long ID;
     @Column(name = "name_kk", columnDefinition = "TEXT")
     private String nameKK;
     @Column(name = "name_ru", columnDefinition = "TEXT")
@@ -31,8 +31,8 @@ public class City {
     @OneToMany(mappedBy = "city")
     private List<University> universities;
 
-    public City(Long id, String nameKK, String nameRU, String nameEN, Country country) {
-        this.id = id;
+    public City(Long ID, String nameKK, String nameRU, String nameEN, Country country) {
+        this.ID = ID;
         this.nameKK = nameKK;
         this.nameRU = nameRU;
         this.nameEN = nameEN;

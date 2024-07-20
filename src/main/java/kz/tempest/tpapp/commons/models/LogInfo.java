@@ -16,7 +16,7 @@ import java.time.ZoneId;
 public class LogInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long ID;
     @Column(name = "date_time", columnDefinition = "TIMESTAMP")
     private LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Almaty"));
     @Column(name = "content", columnDefinition = "TEXT")

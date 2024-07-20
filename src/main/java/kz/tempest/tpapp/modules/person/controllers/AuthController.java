@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import kz.tempest.tpapp.commons.dtos.Response;
 import kz.tempest.tpapp.commons.dtos.ResponseMessage;
 import kz.tempest.tpapp.commons.enums.Language;
-import kz.tempest.tpapp.commons.enums.ResponseMessageStatus;
+import kz.tempest.tpapp.commons.enums.RMStatus;
 import kz.tempest.tpapp.commons.utils.TranslateUtil;
 import kz.tempest.tpapp.modules.person.constants.PersonMessages;
 import kz.tempest.tpapp.modules.person.dtos.LoginRequest;
@@ -32,7 +32,7 @@ public class AuthController {
         Response response = new Response();
         Person person = personService.login(loginRequest, authenticationManager);
         TokenResponse token = new TokenResponse(person);
-        response.put("message", new ResponseMessage(TranslateUtil.getMessage(PersonMessages.SUCCESSFULLY_LOGIN, language), ResponseMessageStatus.SUCCESS));
+        response.put("message", new ResponseMessage(TranslateUtil.getMessage(PersonMessages.SUCCESSFULLY_LOGIN, language), RMStatus.SUCCESS));
         response.put("token", token);
         return response;
     }
@@ -46,6 +46,6 @@ public class AuthController {
             return Response.getResponse("message", message);
         }
         return Response.getResponse("message", new ResponseMessage(TranslateUtil
-                .getMessage(PersonMessages.SIGN_UP_FAILED, language), ResponseMessageStatus.ERROR));
+                .getMessage(PersonMessages.SIGN_UP_FAILED, language), RMStatus.ERROR));
     }
 }

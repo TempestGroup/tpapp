@@ -38,7 +38,7 @@ public class SettingService {
     }
 
     public static Object getSettingValue(String key) {
-        return getValue(Objects.requireNonNull(jdbcTemplate.query("SELECT * FROM settings WHERE key = ?", SettingService::mapRowToSetting, key)));
+        return getValue(Objects.requireNonNull(jdbcTemplate.query("SELECT * FROM settings WHERE code = ?", SettingService::mapRowToSetting, key)));
     }
 
     public static List<Setting> getSettings(List<String> keys) {
@@ -55,7 +55,7 @@ public class SettingService {
     }
 
     public static void setSettingValue(Setting setting) {
-        jdbcTemplate.execute("INSERT INTO settings(key, value, type, name_kk, name_ru, name_en) VALUES ('" + setting.getKey() + "', '" +
+        jdbcTemplate.execute("INSERT INTO settings(code, value, type, name_kk, name_ru, name_en) VALUES ('" + setting.getCode() + "', '" +
                 setting.getValue() + "', '" + setting.getType().name() + "', '" + setting.getNameKK() + "', '" + setting.getNameRU() + "', '" +
                 setting.getNameEN() + "') ON DUPLICATE KEY UPDATE value = VALUES(value), type = VALUES(type), name_kk = VALUES(name_kk), " +
                 " name_ru = VALUES(name_ru), name_en = VALUES(name_en)");
@@ -70,11 +70,11 @@ public class SettingService {
     }
 
     private static void setInMap(Setting setting) {
-        settings.put(setting.getKey(), setting);
+        settings.put(setting.getCode(), setting);
     }
 
     private static Setting mapRowToSetting(ResultSet rs) throws SQLException {
-        return rs.next() ? new Setting(rs.getString("key"), rs.getString("name_kk"),
+        return rs.next() ? new Setting(rs.getString("code"), rs.getString("name_kk"),
                 rs.getString("name_ru"), rs.getString("name_en"),
                 rs.getString("value"), SettingType.valueOf(rs.getString("type"))) : null;
     }
@@ -82,7 +82,7 @@ public class SettingService {
     private static List<Setting> mapRowToSettingList(ResultSet rs) throws SQLException {
         List<Setting> settings = new ArrayList<>();
         while (rs.next()) {
-            settings.add(new Setting(rs.getString("key"), rs.getString("name_kk"),
+            settings.add(new Setting(rs.getString("code"), rs.getString("name_kk"),
                     rs.getString("name_ru"), rs.getString("name_en"),
                     rs.getString("value"), SettingType.valueOf(rs.getString("type"))));
         }

@@ -19,7 +19,7 @@ public class SettingResponse {
     private Object value;
 
     public static SettingResponse from(Setting setting, Language language) {
-        return new SettingResponse(setting.getKey(), setting.getName(language), setting.getNameKK(),
+        return new SettingResponse(setting.getCode(), setting.getName(language), setting.getNameKK(),
                 setting.getNameRU(), setting.getNameEN(), SettingService.getValue(setting));
     }
 }

@@ -12,8 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component
-@RequiredArgsConstructor
 public class LogUtil {
+
+    public LogUtil (LogInfoService logInfoService) {
+        LogUtil.logInfoService = logInfoService;
+    }
     private static LogInfoService logInfoService;
     private static final Logger logger = LoggerFactory.getLogger("TempestApp");
 

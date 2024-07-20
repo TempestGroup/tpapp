@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CountryResponse {
-    private Long id;
+    private Long ID;
     private String name;
     private String nameKK;
     private String nameRU;
     private String nameEN;
 
     public static CountryResponse from(Country country, Language language) {
-        return new CountryResponse(country.getId(), country.getName(language), country.getNameKK(), country.getNameRU(), country.getNameEN());
+        return new CountryResponse(country.getID(), country.getName(language), country.getNameKK(), country.getNameRU(), country.getNameEN());
     }
 }

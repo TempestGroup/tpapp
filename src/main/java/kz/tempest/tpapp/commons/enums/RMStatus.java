@@ -2,7 +2,7 @@ package kz.tempest.tpapp.commons.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum ResponseMessageStatus {
+public enum RMStatus {
     SUCCESS,
     WARNING,
     ERROR;

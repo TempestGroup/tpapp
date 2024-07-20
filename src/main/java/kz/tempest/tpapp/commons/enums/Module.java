@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Module {
-    PERSON("person", "Пайдаланушылар", "Пользователи", "Person");
+    PERSON("person", "Пайдаланушылар", "Пользователи", "Person"),
+    DATA("data", "Деректер", "Данные", "Data");
 
     private final String code;
     private final String nameKK;
