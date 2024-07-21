@@ -15,27 +15,13 @@ public class Response extends HashMap<Object, Object> {
         }};
     }
 
-    public static Response getResponse(Object... objects) {
-        return listToMap(Arrays.asList(objects));
-    }
-
     public static Response getResponse(Object object) {
         if (object instanceof Collection<?> collection) {
-            return listToMap(collection);
+            return getResponse("list", collection);
         } else if (object instanceof Map<?, ?> map) {
             return (Response) map;
         }
         return map(object);
-    }
-
-    private static Response listToMap(Collection<?> collection) {
-        Response response = new Response();
-        int index = 0;
-        for (Object element : collection) {
-            response.put(index, element);
-            index++;
-        }
-        return response;
     }
 
     @SneakyThrows
