@@ -40,7 +40,7 @@ public class GptConfig {
 
     public Map<String, Object> getRequestBody(String prompt) {
         return new HashMap<>() {{
-            put("model", "gpt-3.5-turbo-instruct");
+            put("model", model);
             put("prompt", prompt);
             put("temperature", 1);
             put("max_tokens", 256);

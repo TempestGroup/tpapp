@@ -1,8 +1,8 @@
 package kz.tempest.tpapp.commons.fileReader;
 
+import kz.tempest.tpapp.commons.utils.ClassUtil;
 import kz.tempest.tpapp.commons.utils.FileUtil;
 import lombok.Data;
-import lombok.SneakyThrows;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.util.HashMap;
@@ -17,30 +17,28 @@ public abstract class Reader {
         return ReaderType.getByClass(getClass());
     }
 
-    @SneakyThrows
-    public static Reader getInstance(MultipartFile file) {
+    public static <T extends Reader> T getInstance(MultipartFile file) {
         bytes = FileUtil.getBytes(file);
         return instance(FileUtil.getFileFormat(file));
     }
 
-    public static Reader getInstance(File file) {
+    public static <T extends Reader> T getInstance(File file) {
         bytes = FileUtil.getBytes(file);
         return instance(FileUtil.getFileFormat(file));
     }
 
-    public static Reader getInstance(String filename, byte[] bytes) {
+    public static <T extends Reader> T getInstance(String filename, byte[] bytes) {
         Reader.bytes = bytes;
         return instance(FileUtil.getFileFormat(filename));
     }
 
-    public static Reader getInstance(String filename) {
+    public static <T extends Reader> T getInstance(String filename) {
         Reader.bytes = new byte[0];
         return instance(FileUtil.getFileFormat(filename));
     }
 
-    @SneakyThrows
-    public static Reader instance(String fileFormat) {
-        return ReaderType.getByFormat(fileFormat).getReader().newInstance();
+    public static <T extends Reader> T instance(String fileFormat) {
+        return ClassUtil.cast(ClassUtil.newInstance(ReaderType.getByFormat(fileFormat).getReader()), (Class<T>) ReaderType.getByFormat(fileFormat).getReader());
     }
 
     public abstract Object read();

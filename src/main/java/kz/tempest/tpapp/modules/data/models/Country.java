@@ -6,7 +6,10 @@ import kz.tempest.tpapp.commons.utils.ClassUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcType;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -14,8 +17,9 @@ import java.util.List;
 @Entity(name = "countries")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Country {
+public class Country implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ID;
     @Column(name = "name_kk", columnDefinition = "TEXT")
     private String nameKK;
@@ -23,11 +27,10 @@ public class Country {
     private String nameRU;
     @Column(name = "name_en", columnDefinition = "TEXT")
     private String nameEN;
-    @OneToMany(mappedBy = "country")
-    private List<City> cities;
+    @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
+    private List<City> cities = new ArrayList<>();
 
-    public Country(Long ID, String nameKK, String nameRU, String nameEN) {
-        this.ID = ID;
+    public Country(String nameKK, String nameRU, String nameEN) {
         this.nameKK = nameKK;
         this.nameRU = nameRU;
         this.nameEN = nameEN;

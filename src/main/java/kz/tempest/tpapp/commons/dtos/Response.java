@@ -1,8 +1,6 @@
 package kz.tempest.tpapp.commons.dtos;
 
-import lombok.SneakyThrows;
-import java.lang.reflect.Field;
-import java.util.Arrays;
+import kz.tempest.tpapp.commons.utils.MapperUtil;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,17 +22,7 @@ public class Response extends HashMap<Object, Object> {
         return map(object);
     }
 
-    @SneakyThrows
     private static Response map(Object object) {
-        Response response = new Response();
-        Class<?> objectClass = object.getClass();
-        while (objectClass != null) {
-            for (Field field : objectClass.getDeclaredFields()) {
-                field.setAccessible(true);
-                response.put(field.getName(), field.get(object));
-            }
-            objectClass = objectClass.getSuperclass();
-        }
-        return response;
+        return (Response) MapperUtil.mapToMap(object, Response.class);
     }
 }

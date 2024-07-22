@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 
 public class FileUtil {
@@ -23,20 +24,26 @@ public class FileUtil {
         return getFileFormat(file.getName());
     }
 
-    @SneakyThrows
     public static byte[] getBytes(MultipartFile file) {
-        if (file == null || file.isEmpty()) {
+        try {
+            if (file == null || file.isEmpty()) {
+                return null;
+            }
+            return file.getBytes();
+        } catch (Exception ignored) {
             return null;
         }
-        return file.getBytes();
     }
 
-    @SneakyThrows
     public static byte[] getBytes(File file) {
-        if (file == null || !file.exists()) {
+        try {
+            if (file == null || !file.exists()) {
+                return null;
+            }
+            return Files.readAllBytes(file.toPath());
+        } catch (Exception ignored) {
             return null;
         }
-        return Files.readAllBytes(file.toPath());
     }
 
 }

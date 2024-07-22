@@ -7,7 +7,10 @@ import kz.tempest.tpapp.commons.utils.ClassUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -17,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 public class City {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ID;
     @Column(name = "name_kk", columnDefinition = "TEXT")
     private String nameKK;
@@ -29,7 +33,7 @@ public class City {
     @JoinColumn(name = "country_id")
     private Country country;
     @OneToMany(mappedBy = "city")
-    private List<University> universities;
+    private List<University> universities = new ArrayList<>();
 
     public City(Long ID, String nameKK, String nameRU, String nameEN, Country country) {
         this.ID = ID;

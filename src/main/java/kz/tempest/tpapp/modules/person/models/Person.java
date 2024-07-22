@@ -3,12 +3,14 @@ package kz.tempest.tpapp.modules.person.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import kz.tempest.tpapp.commons.enums.Right;
-import kz.tempest.tpapp.commons.models.MenuItem;
+import kz.tempest.tpapp.commons.models.ExtensionInfo;
+import kz.tempest.tpapp.commons.models.ModuleExtensionRight;
+import kz.tempest.tpapp.commons.models.ModuleInfo;
 import kz.tempest.tpapp.modules.person.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.bind.Nested;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,19 +37,21 @@ public class Person implements UserDetails {
     private byte[] image;
     @Column(name = "active", columnDefinition = "TINYINT")
     private boolean active;
+
+    @Embedded
+    private PersonInformation information = new PersonInformation();
+
     @JsonIgnore
     @Enumerated(EnumType.STRING)
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "person_roles", joinColumns = @JoinColumn(name = "person_id"))
+    @Column(name = "role")
     private List<Role> roles = new ArrayList<>();
 
     @JsonIgnore
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "person_menu_items", joinColumns = @JoinColumn(name = "person_id"))
-    @MapKeyJoinColumn(name = "menu_item_id")
-    @Column(name = "`right`")
-    @Enumerated(EnumType.STRING)
-    private Map<MenuItem, Right> personMenuItems = new HashMap<>();
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "person_module_extension_rights", joinColumns = @JoinColumn(name = "person_id"))
+    private List<ModuleExtensionRight> personModuleExtensionRights = new ArrayList<>();
 
 
     public Person (String email, String password, byte[] image, boolean active) {

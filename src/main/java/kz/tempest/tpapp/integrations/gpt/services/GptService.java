@@ -1,6 +1,7 @@
 package kz.tempest.tpapp.integrations.gpt.services;
 
 import kz.tempest.tpapp.commons.utils.ApiUtil;
+import kz.tempest.tpapp.commons.utils.MapperUtil;
 import kz.tempest.tpapp.integrations.gpt.configurations.GptConfig;
 import kz.tempest.tpapp.integrations.gpt.dtos.ChatResponse;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +29,12 @@ public class GptService {
     }
 
     private ChatResponse fromResponse(String response) {
-        List<ChatResponse.Choice> choices = new ArrayList<>();
-        JsonArray choicesArray = Json.createReader(new StringReader(response)).readObject().getJsonArray("choices");
-        for (int i = 0; i < choicesArray.size(); i++) {
-            choices.add(new ChatResponse.Choice(choicesArray.getJsonObject(i).getInt("index"), choicesArray.getJsonObject(i).getString("text")));
-        }
-        return new ChatResponse(choices);
+//        List<ChatResponse.Choice> choices = new ArrayList<>();
+//        JsonArray choicesArray = Json.createReader(new StringReader(response)).readObject().getJsonArray("choices");
+//        for (int i = 0; i < choicesArray.size(); i++) {
+//            choices.add(new ChatResponse.Choice(choicesArray.getJsonObject(i).getInt("index"), choicesArray.getJsonObject(i).getString("text")));
+//        }
+//        return new ChatResponse(choices);
+        return MapperUtil.mapToObject(response, ChatResponse.class);
     }
 }

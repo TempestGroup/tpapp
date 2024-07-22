@@ -10,11 +10,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Table(name = "menu_items")
-@Entity(name = "menu_items")
+@Table(name = "module_extensions")
+@Entity(name = "module_extensions")
 @NoArgsConstructor
 @AllArgsConstructor
-public class MenuItem {
+public class ExtensionInfo {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ID;
     @Column(name = "name_kk", columnDefinition = "TEXT")
@@ -24,8 +24,9 @@ public class MenuItem {
     @Column(name = "name_en", columnDefinition = "TEXT")
     private String nameEN;
     @JsonIgnore
-    @Enumerated(EnumType.STRING)
-    private Module module;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "module")
+    private ModuleInfo module;
 
     public String getName(Language language) {
         return (String) ClassUtil.getLocalizedFieldValue(getClass(), this, "name", language);
