@@ -1,6 +1,6 @@
-package kz.tempest.tpapp.commons.fileReader;
+package kz.tempest.tpapp.fileReader;
 
-import kz.tempest.tpapp.commons.fileReader.readers.*;
+import kz.tempest.tpapp.fileReader.readers.*;
 
 import java.util.HashMap;
 import java.util.List;

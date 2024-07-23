@@ -23,6 +23,6 @@ public class Response extends HashMap<Object, Object> {
     }
 
     private static Response map(Object object) {
-        return (Response) MapperUtil.mapToMap(object, Response.class);
+        return (Response) MapperUtil.mapObjectToMap(object, Response.class);
     }
 }

@@ -1,4 +1,4 @@
-package kz.tempest.tpapp.commons.fileReader;
+package kz.tempest.tpapp.fileReader;
 
 import kz.tempest.tpapp.commons.utils.ClassUtil;
 import kz.tempest.tpapp.commons.utils.FileUtil;

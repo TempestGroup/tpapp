@@ -19,22 +19,12 @@ import java.util.Map;
 public class GptService {
     private final GptConfig gptConfig;
 
-    public String getResponse(String prompt) {
+    public ChatResponse getResponse(String prompt) {
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(gptConfig.getRequestBody(prompt), gptConfig.getHeaders());
         ResponseEntity<String> response = ApiUtil.exchange(gptConfig.getApiUrl(), HttpMethod.POST, entity, String.class);
         if (response.getStatusCode() == HttpStatus.OK) {
-            return fromResponse(response.getBody()).getChoices().get(0).getText();
+            return MapperUtil.mapJsonToObject(response.getBody(), ChatResponse.class);
         }
-        return "Error: " + response.getStatusCode() + " - " + response.getBody();
-    }
-
-    private ChatResponse fromResponse(String response) {
-//        List<ChatResponse.Choice> choices = new ArrayList<>();
-//        JsonArray choicesArray = Json.createReader(new StringReader(response)).readObject().getJsonArray("choices");
-//        for (int i = 0; i < choicesArray.size(); i++) {
-//            choices.add(new ChatResponse.Choice(choicesArray.getJsonObject(i).getInt("index"), choicesArray.getJsonObject(i).getString("text")));
-//        }
-//        return new ChatResponse(choices);
-        return MapperUtil.mapToObject(response, ChatResponse.class);
+        return null;
     }
 }

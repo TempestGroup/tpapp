@@ -1,9 +1,9 @@
-package kz.tempest.tpapp.commons.fileReader.readers;
+package kz.tempest.tpapp.fileReader.readers;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import kz.tempest.tpapp.commons.fileReader.Reader;
+import kz.tempest.tpapp.fileReader.Reader;
 import kz.tempest.tpapp.commons.utils.LogUtil;
 
 import java.io.ByteArrayInputStream;

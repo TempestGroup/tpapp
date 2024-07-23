@@ -1,12 +1,15 @@
 package kz.tempest.tpapp.commons.utils;
 
-import kz.tempest.tpapp.commons.fileReader.Reader;
+import org.json.JSONObject;
+import org.json.JSONArray;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.*;
 
 public class MapperUtil {
-    public static <T> T mapToObject(Object source, Class<T> targetClass) {
+    public static <T> T mapObjectToObject(Object source, Class<T> targetClass) {
         try {
             T target = targetClass.newInstance();
             Class<?> sourceClass = source.getClass();
@@ -26,7 +29,7 @@ public class MapperUtil {
         }
     }
 
-    public static Map<Object, Object> mapToMap(Object object, Class<? extends Map<Object, Object>> clazz) {
+    public static Map<Object, Object> mapObjectToMap(Object object, Class<? extends Map<Object, Object>> clazz) {
         try {
             Map<Object, Object> map = clazz.getDeclaredConstructor().newInstance();
             Class<?> objectClass = object.getClass();
@@ -44,9 +47,9 @@ public class MapperUtil {
         }
     }
 
-    public static <T> T mapToObject(Map<String, Object> map, Class<T> clazz) {
+    public static <T> T mapMapToObject(Map<String, Object> map, Class<T> clazz) {
         try {
-            T obj = clazz.getDeclaredConstructor().newInstance();
+            T obj = clazz.newInstance();
             for (Field field : clazz.getDeclaredFields()) {
                 field.setAccessible(true);
                 String fieldName = field.getName();
@@ -60,7 +63,9 @@ public class MapperUtil {
                         Class<?> elementType = (Class<?>) genericType.getActualTypeArguments()[0];
                         List<Object> list = new ArrayList<>();
                         for (Object item : (List<?>) value) {
-                            list.add(convertValue(item, elementType));
+                            if (item != null) {
+                                list.add(convertValue(item, elementType));
+                            }
                         }
                         field.set(obj, list);
                     } else if (Map.class.isAssignableFrom(fieldType)) {
@@ -75,7 +80,7 @@ public class MapperUtil {
                         }
                         field.set(obj, mapResult);
                     } else if (isComplexType(fieldType)) {
-                        Object nestedObject = mapToObject((Map<String, Object>) value, fieldType);
+                        Object nestedObject = mapMapToObject((Map<String, Object>) value, fieldType);
                         field.set(obj, nestedObject);
                     }
                 }
@@ -87,8 +92,81 @@ public class MapperUtil {
         }
     }
 
-    public static <T> T mapToObject(String json, Class<T> targetClass) {
-        return mapToObject(Reader.getInstance(".json", json.getBytes()).read(), targetClass);
+    private static List<Object> mapJsonArrayToList(JSONArray jsonArray, Type type) throws ClassNotFoundException {
+        List<Object> list = new ArrayList<>();
+        Class<?> elementType = Object.class;
+
+        if (type instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+            if (actualTypeArguments.length > 0) {
+                elementType = Class.forName(actualTypeArguments[0].getTypeName());
+            }
+        }
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            Object item = jsonArray.get(i);
+            if (item instanceof JSONObject) {
+                item = mapJsonToObject(item.toString(), elementType);
+            } else if (item instanceof JSONArray) {
+                item = mapJsonArrayToList((JSONArray) item, elementType);
+            }
+            list.add(item);
+        }
+        return list;
+    }
+
+    private static Map<String, Object> mapJsonObjectToMap(JSONObject jsonObject, Type type) throws ClassNotFoundException {
+        Map<String, Object> map = new HashMap<>();
+        Class<?> keyType = String.class;
+        Class<?> valueType = Object.class;
+
+        if (type instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+            if (actualTypeArguments.length > 1) {
+                keyType = Class.forName(actualTypeArguments[0].getTypeName());
+                valueType = Class.forName(actualTypeArguments[1].getTypeName());
+            }
+        }
+
+        for (String key : jsonObject.keySet()) {
+            Object value = jsonObject.get(key);
+            if (value instanceof JSONObject) {
+                value = mapJsonToObject(value.toString(), valueType);
+            } else if (value instanceof JSONArray) {
+                value = mapJsonArrayToList((JSONArray) value, valueType);
+            }
+            map.put(key, value);
+        }
+        return map;
+    }
+
+    public static <T> T mapJsonToObject(String jsonString, Class<T> clazz) {
+        try {
+            T obj = clazz.newInstance();
+            JSONObject jsonObject = new JSONObject(jsonString);
+            for (Field field : clazz.getDeclaredFields()) {
+                field.setAccessible(true);
+                String fieldName = field.getName();
+                if (jsonObject.has(fieldName)) {
+                    Object value = jsonObject.get(fieldName);
+                    if (field.getType().isPrimitive() || field.getType().equals(String.class) || field.getType().equals(Integer.class)) {
+                        field.set(obj, convertValue(value, field.getType()));
+                    } else if (List.class.isAssignableFrom(field.getType())) {
+                        field.set(obj, mapJsonArrayToList((JSONArray) value, field.getGenericType()));
+                    } else if (Map.class.isAssignableFrom(field.getType())) {
+                        field.set(obj, mapJsonObjectToMap((JSONObject) value, field.getGenericType()));
+                    } else if (isComplexType(field.getType())) {
+                        field.set(obj, mapJsonToObject(value.toString(), field.getType()));
+                    }
+                }
+            }
+            return obj;
+        } catch (Exception e) {
+            LogUtil.write(e);
+            return null;
+        }
     }
 
     private static Object convertValue(Object value, Class<?> targetType) {
@@ -117,5 +195,30 @@ public class MapperUtil {
 
     private static boolean isComplexType(Class<?> type) {
         return !type.isPrimitive() && !type.isAssignableFrom(String.class) && !List.class.isAssignableFrom(type) && !Map.class.isAssignableFrom(type);
+    }
+
+    public static <T> Map<Object, T> mapListToMap(List<T> list, Class<? extends Map<Object, T>> clazz, String keyMethodName) {
+        try {
+            Map<Object, T> map = clazz.newInstance();
+            for (T item : list) {
+                Method keyMethod = item.getClass().getMethod(keyMethodName);
+                Object key = keyMethod.invoke(item);
+                map.put(key, item);
+            }
+            return map;
+        } catch (Exception e) {
+            LogUtil.write(e);
+            return Collections.emptyMap();
+        }
+    }
+
+    public static <V> List<V> mapMapToList(Map<Object, V> map, Comparator<? super Object> keyComparator) {
+        List<Map.Entry<Object, V>> entryList = new ArrayList<>(map.entrySet());
+        entryList.sort((e1, e2) -> keyComparator.compare(e1.getKey(), e2.getKey()));
+        List<V> valueList = new ArrayList<>();
+        for (Map.Entry<Object, V> entry : entryList) {
+            valueList.add(entry.getValue());
+        }
+        return valueList;
     }
 }

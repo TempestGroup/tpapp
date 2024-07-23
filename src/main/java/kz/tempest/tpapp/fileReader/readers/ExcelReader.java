@@ -1,6 +1,6 @@
-package kz.tempest.tpapp.commons.fileReader.readers;
+package kz.tempest.tpapp.fileReader.readers;
 
-import kz.tempest.tpapp.commons.fileReader.Reader;
+import kz.tempest.tpapp.fileReader.Reader;
 import kz.tempest.tpapp.commons.utils.LogUtil;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;

@@ -1,20 +1,15 @@
 package kz.tempest.tpapp.commons.utils;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.Map;
 
-@Component
-@RequiredArgsConstructor
 public class ApiUtil {
 
-    private static RestTemplate restTemplate;
+    private static final RestTemplate restTemplate = new RestTemplate();
 
     public static <T> ResponseEntity<T> exchange(String url, HttpMethod method, @Nullable HttpEntity<?> requestEntity, Class<T> responseType, Object... uriVariables) {
         return restTemplate.exchange(url, method, requestEntity, responseType, uriVariables);
