@@ -2,10 +2,20 @@ package kz.tempest.tpapp.commons.utils;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class MapperUtil {
@@ -220,5 +230,36 @@ public class MapperUtil {
             valueList.add(entry.getValue());
         }
         return valueList;
+    }
+
+    public static <T> T mapXmlToObject(String xml, Class<T> clazz) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            InputStream inputStream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
+            Document document = builder.parse(inputStream);
+            document.getDocumentElement().normalize();
+            T obj = clazz.getDeclaredConstructor().newInstance();
+            NodeList nodeList = document.getDocumentElement().getChildNodes();
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node node = nodeList.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) node;
+                    String fieldName = element.getNodeName();
+                    String fieldValue = element.getTextContent();
+                    try {
+                        var field = clazz.getDeclaredField(fieldName);
+                        field.setAccessible(true);
+                        Class<?> fieldType = field.getType();
+                        Object value = convertValue(fieldValue, fieldType);
+                        field.set(obj, value);
+                    } catch (NoSuchFieldException ignored) {}
+                }
+            }
+            return obj;
+        } catch (Exception e) {
+            LogUtil.write(e);
+            return null;
+        }
     }
 }
