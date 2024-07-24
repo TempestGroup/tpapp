@@ -36,7 +36,7 @@ public class IFileController {
     }
 
     @ResponseBody
-    @GetMapping(value = "/{fileID}")
+    @PostMapping(value = "/{fileID}")
     public Response delete(@PathVariable("fileID") IFile file, @RequestHeader(name = "Language", defaultValue = "ru") Language language) {
         ResponseMessage message = new ResponseMessage();
         fileService.delete(file, message, language);
