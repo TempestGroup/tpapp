@@ -1,6 +1,5 @@
-package kz.tempest.tpapp.integrations.gpt.configurations;
+package kz.tempest.tpapp.integrations.gpt.configs;
 
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;

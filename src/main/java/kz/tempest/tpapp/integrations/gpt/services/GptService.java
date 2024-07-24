@@ -2,16 +2,12 @@ package kz.tempest.tpapp.integrations.gpt.services;
 
 import kz.tempest.tpapp.commons.utils.ApiUtil;
 import kz.tempest.tpapp.commons.utils.MapperUtil;
-import kz.tempest.tpapp.integrations.gpt.configurations.GptConfig;
+import kz.tempest.tpapp.integrations.gpt.configs.GptConfig;
 import kz.tempest.tpapp.integrations.gpt.dtos.ChatResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import javax.json.Json;
-import javax.json.JsonArray;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Map;
 
 @Service

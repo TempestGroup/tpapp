@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PageFilter {
-    private int pageNumber;
-    private int countInPage;
+    private int pageNumber = 1;
+    private int countInPage = 5;
 }

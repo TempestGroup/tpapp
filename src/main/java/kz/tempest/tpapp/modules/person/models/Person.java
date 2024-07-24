@@ -116,7 +116,16 @@ public class Person implements UserDetails {
     }
 
     public boolean isUser() {
-        return roles.contains(Role.USER);
+        return is(Role.USER);
+    }
+
+    public boolean isStaff() {
+        for (Role role : Role.values()) {
+            if (role != Role.USER) {
+                return is(role);
+            }
+        }
+        return false;
     }
 
 

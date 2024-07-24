@@ -14,4 +14,9 @@ public class ResponseMessage {
     private String content;
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     private RMStatus status;
+
+    public void set(String content, RMStatus status) {
+        this.content = content;
+        this.status = status;
+    }
 }

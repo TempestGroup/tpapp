@@ -9,15 +9,21 @@ import java.util.Map;
 public class SortUtil {
 
     public static List<Sort.Order> getSortOrders(Class iClass, Map<String, Sort.Direction> filterSorts, Language language) {
-        String fieldName;
+        if (filterSorts == null || filterSorts.isEmpty()) {
+            return new ArrayList<>();
+        }
+        String fieldName = null;
         List<Sort.Order> sorts = new ArrayList<>();
         for (Map.Entry<String, Sort.Direction> e: filterSorts.entrySet()) {
-            if (ClassUtil.getField(iClass, e.getKey() + language.suffix()) != null) {
-                fieldName = e.getKey() + language.suffix();
-            } else {
-                fieldName = e.getKey();
+            if (ClassUtil.hasLocalizedField(iClass, e.getKey(), language)) {
+                fieldName = ClassUtil.getLocalizedFieldName(iClass, e.getKey(), language);
+            } else if (ClassUtil.hasField(iClass, e.getKey())) {
+                fieldName = ClassUtil.getFieldName(iClass, e.getKey());
             }
-            sorts.add(new Sort.Order(e.getValue(), fieldName));
+
+            if (fieldName != null) {
+                sorts.add(new Sort.Order(e.getValue(), fieldName));
+            }
         }
         return sorts;
     }
