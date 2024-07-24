@@ -13,6 +13,7 @@ import kz.tempest.tpapp.modules.person.dtos.TokenResponse;
 import kz.tempest.tpapp.modules.person.models.Person;
 import kz.tempest.tpapp.modules.person.services.PersonService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
@@ -38,9 +39,9 @@ public class AuthController {
     }
 
     @ResponseBody
-    @PostMapping("/register")
+    @PostMapping(value = "/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @PreAuthorize("isAnonymous()")
-    public Response register(HttpServletRequest request, @RequestBody RegisterRequest registerRequest, @RequestHeader(value = "Language", defaultValue = "ru") Language language) throws IOException {
+    public Response register(HttpServletRequest request, @ModelAttribute RegisterRequest registerRequest, @RequestHeader(value = "Language", defaultValue = "ru") Language language) throws IOException {
         ResponseMessage message = new ResponseMessage();
         if (personService.register(registerRequest, message, language, request)) {
             return Response.getResponse("message", message);

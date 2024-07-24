@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import kz.tempest.tpapp.commons.enums.Right;
 import kz.tempest.tpapp.commons.models.ExtensionInfo;
-import kz.tempest.tpapp.commons.models.ModuleExtensionRight;
-import kz.tempest.tpapp.commons.models.ModuleInfo;
+import kz.tempest.tpapp.modules.person.converters.RolesConverter;
 import kz.tempest.tpapp.modules.person.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.context.properties.bind.Nested;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,22 +40,24 @@ public class Person implements UserDetails {
     private PersonInformation information = new PersonInformation();
 
     @JsonIgnore
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "person_roles", joinColumns = @JoinColumn(name = "person_id"))
-    @Column(name = "role")
+    @Column(name = "roles")
+    @Convert(converter = RolesConverter.class)
     private List<Role> roles = new ArrayList<>();
 
     @JsonIgnore
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "person_module_extension_rights", joinColumns = @JoinColumn(name = "person_id"))
-    private List<ModuleExtensionRight> personModuleExtensionRights = new ArrayList<>();
+    @MapKeyJoinColumn(name = "extension")
+    @Column(name = "right")
+    @Enumerated(EnumType.STRING)
+    private Map<ExtensionInfo, Right> personModuleExtensionRights = new HashMap<>();
 
 
-    public Person (String email, String password, byte[] image, boolean active) {
+    public Person (String email, String password, byte[] image, List<Role> roles, boolean active) {
         this.email = email;
         this.password = password;
         this.image = image;
+        this.roles = roles;
         this.active = active;
     }
 

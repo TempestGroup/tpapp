@@ -1,5 +1,6 @@
 package kz.tempest.tpapp.modules.person.specifications;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import kz.tempest.tpapp.commons.utils.StringUtil;
@@ -20,11 +21,13 @@ public class PersonSpecification {
                             criteriaBuilder.like(root.get("email"), "%" + (String) value + "%")
                     );
                 }
-                if (key.equals("roles") && !((List<Role>) value).isEmpty() && !person.isUser()) {
-                    List<Role> roles = ((List<Role>) value);
-                    Path<List<String>> rolesPath = root.join("roles");
-                    Predicate rolePredicate = rolesPath.in(roles);
-                    predication = criteriaBuilder.and(predication, rolePredicate);
+                if (key.equals("roles") && !((List<String>) value).isEmpty() && !person.isUser()) {
+                    List<String> roles = ((List<String>) value);
+                    CriteriaBuilder.In<String> inClause = criteriaBuilder.in(root.get("roles"));
+                    for (String role : roles) {
+                        inClause.value(role);
+                    }
+                    predication = criteriaBuilder.and(predication, inClause);
                 }
             }
             return predication;
