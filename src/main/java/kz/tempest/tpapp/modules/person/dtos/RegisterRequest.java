@@ -9,7 +9,6 @@ public class RegisterRequest {
     private Long id = 0L;
     private String email;
     private String password;
-    @Nullable
     private MultipartFile image;
     private boolean active = false;
 }

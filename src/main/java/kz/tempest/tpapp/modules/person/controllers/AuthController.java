@@ -1,6 +1,7 @@
 package kz.tempest.tpapp.modules.person.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import kz.tempest.tpapp.commons.dtos.Response;
 import kz.tempest.tpapp.commons.dtos.ResponseMessage;
 import kz.tempest.tpapp.commons.enums.Language;
@@ -13,7 +14,9 @@ import kz.tempest.tpapp.modules.person.dtos.TokenResponse;
 import kz.tempest.tpapp.modules.person.models.Person;
 import kz.tempest.tpapp.modules.person.services.PersonService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
@@ -48,5 +51,11 @@ public class AuthController {
         }
         return Response.getResponse("message", new ResponseMessage(TranslateUtil
                 .getMessage(PersonMessages.SIGN_UP_FAILED, language), RMStatus.ERROR));
+    }
+
+    @GetMapping("/images/{personID}")
+    public void getImage(@PathVariable("personID") Person person, HttpServletResponse response) throws IOException {
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        response.getOutputStream().write(person.getImage());
     }
 }

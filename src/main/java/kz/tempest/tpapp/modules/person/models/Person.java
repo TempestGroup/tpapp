@@ -29,9 +29,9 @@ public class Person implements UserDetails {
     @JsonIgnore
     @Column(name = "password")
     private String password;
-    @Lob
     @JsonIgnore
-    @Column(name = "image", columnDefinition = "LONGBLOB", nullable = true)
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] image;
     @Column(name = "active", columnDefinition = "TINYINT")
     private boolean active;
@@ -48,7 +48,7 @@ public class Person implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "person_module_extension_rights", joinColumns = @JoinColumn(name = "person_id"))
     @MapKeyJoinColumn(name = "extension")
-    @Column(name = "right")
+    @Column(name = "`right`")
     @Enumerated(EnumType.STRING)
     private Map<ExtensionInfo, Right> personModuleExtensionRights = new HashMap<>();
 

@@ -58,16 +58,15 @@ public class ClassUtil {
                 return true;
             }
         }
-
-        return false;
+        return hasField(clazz.getSuperclass(), name, visited);
     }
 
     private static String getFieldName(Class<?> clazz, String name, Set<Class<?>> visited) {
         if (clazz == null || visited.contains(clazz)) {
-            return null;
+            return "";
         }
         visited.add(clazz);
-        for (Field field : clazz.getDeclaredFields()) {
+        for(Field field : clazz.getDeclaredFields()) {
             if (field.getName().equals(name)) {
                 return field.getName();
             }
@@ -76,7 +75,10 @@ public class ClassUtil {
             }
             return field.getName() + "." + getFieldName(field.getType(), name, visited);
         }
-        return null;
+        if (clazz.getSuperclass() == Objects.class) {
+            return "";
+        }
+        return getFieldName(clazz.getSuperclass(), name, visited);
     }
 
     public static String getFieldName(Class<?> clazz, String name) {
