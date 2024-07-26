@@ -61,14 +61,9 @@ public class ValidationProvider implements ConstraintValidator<Validation, Strin
     }
 
     private String getErrorMessage() {
-        if (message.isEmpty()) {
-            return getMessage(LanguageContext.getLanguage());
-        } else {
-            return TranslateUtil.getMessage(message);
+        if (message == null || message.isEmpty()) {
+            return TranslateUtil.getMessage(messageKK, messageRU, messageEN);
         }
-    }
-
-    public String getMessage(Language language) {
-        return (String) ClassUtil.getLocalizedFieldValue(getClass(), this, "message", language);
+        return TranslateUtil.getMessage(message);
     }
 }

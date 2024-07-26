@@ -43,7 +43,7 @@ public class ClassUtil {
     }
 
     private static boolean hasField(Class<?> clazz, String name, Set<Class<?>> visited) {
-        if (clazz == null || visited.contains(clazz)) {
+        if (clazz == null || visited.contains(clazz) || clazz == Object.class) {
             return false;
         }
         visited.add(clazz);
@@ -62,7 +62,7 @@ public class ClassUtil {
     }
 
     private static String getFieldName(Class<?> clazz, String name, Set<Class<?>> visited) {
-        if (clazz == null || visited.contains(clazz)) {
+        if (clazz == null || visited.contains(clazz) || clazz == Object.class) {
             return "";
         }
         visited.add(clazz);

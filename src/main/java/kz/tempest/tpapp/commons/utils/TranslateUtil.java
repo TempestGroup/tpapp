@@ -22,6 +22,23 @@ public class TranslateUtil {
         return messageSource.getMessage(code, arguments, new Locale(language.name()));
     }
 
+    public static String getMessage(String messageKK, String messageRU, String messageEN) {
+        return getMessage(messageKK, messageRU, messageEN, LanguageContext.getLanguage());
+    }
+
+    public static String getMessage(String messageKK, String messageRU, String messageEN, Language language) {
+        switch (language) {
+            case kk:
+                return messageKK;
+            case ru:
+                return messageRU;
+            case en:
+                return messageEN;
+            default:
+                return getMessage(messageKK, messageRU, messageEN, Language.valueOf(Locale.getDefault().getLanguage()));
+        }
+    }
+
     public static MessageSource getMessageSource() {
         return messageSource;
     }
