@@ -36,7 +36,6 @@ public class ValidationProvider implements ConstraintValidator<Validation, Strin
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        Language language = LanguageContext.getLanguage();
         if (value == null) {
             constraintValidatorContext.disableDefaultConstraintViolation();
             constraintValidatorContext.buildConstraintViolationWithTemplate(getErrorMessage())

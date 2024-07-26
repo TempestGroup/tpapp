@@ -35,7 +35,6 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(Exception.class)
     public static ResponseEntity<Response> handleExceptions (HttpServletRequest request, HttpServletResponse response, Exception exception) {
-        Language language = LanguageContext.getLanguage();
         Object message;
         if (exception instanceof AccessDeniedException) {
             message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.ACCESS_DENIED), RMStatus.ERROR);
