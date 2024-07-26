@@ -1,6 +1,7 @@
 package kz.tempest.tpapp.commons.utils;
 
 import ch.qos.logback.classic.joran.action.LevelAction;
+import kz.tempest.tpapp.commons.contexts.PersonContext;
 import kz.tempest.tpapp.commons.enums.LogType;
 import kz.tempest.tpapp.commons.models.LogInfo;
 import kz.tempest.tpapp.commons.services.LogInfoService;
@@ -22,8 +23,8 @@ public class LogUtil {
 
     public static void write(String content, LogType type) {
         Person person = null;
-        if (SecurityContextHolder.getContext().getAuthentication() != null && !SecurityContextHolder.getContext().getAuthentication().getCredentials().equals("")) {
-            person = Person.getPerson(SecurityContextHolder.getContext().getAuthentication());
+        if (PersonContext.isAuthenticated()) {
+            person = PersonContext.getCurrentPerson();
         }
         logInfoService.create(new LogInfo(content, type, person));
         if (type == LogType.INFO) {

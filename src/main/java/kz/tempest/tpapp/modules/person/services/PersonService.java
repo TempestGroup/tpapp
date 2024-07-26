@@ -40,9 +40,9 @@ public class PersonService implements UserDetailsService {
         return Person.getPerson(authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())));
     }
 
-    public boolean register(RegisterRequest registerRequest, ResponseMessage message, Language language, HttpServletRequest request) throws IOException {
+    public boolean register(RegisterRequest registerRequest, ResponseMessage message, HttpServletRequest request) throws IOException {
         if (personRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
-            message.set(TranslateUtil.getMessage(PersonMessages.USER_EXIST, language), RMStatus.ERROR);
+            message.set(TranslateUtil.getMessage(PersonMessages.USER_EXIST), RMStatus.ERROR);
             LogUtil.write(new UserExistException());
             return false;
         }
@@ -56,7 +56,7 @@ public class PersonService implements UserDetailsService {
             image, List.of(Role.USER, Role.EMPLOYEE), registerRequest.isActive()
         ));
         EventUtil.register(Module.PERSON, EventType.CREATE, person.getID(), request, PersonMessages.REGISTERED_NEW_PERSON, person.getUsername(), person.getID());
-        message.set(TranslateUtil.getMessage(PersonMessages.SUCCESSFULLY_REGISTERED, language), RMStatus.SUCCESS);
+        message.set(TranslateUtil.getMessage(PersonMessages.SUCCESSFULLY_REGISTERED), RMStatus.SUCCESS);
         return true;
     }
 

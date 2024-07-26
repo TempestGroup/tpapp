@@ -27,8 +27,8 @@ public class EventUtil {
     }
 
     public static void register(Module module, EventType type, Long objectID, Person person, HttpServletRequest request, String code, Object... arguments) {
-        register(module, type, objectID, TranslateUtil.getMessage(code, Language.kk, arguments), TranslateUtil.getMessage(code, Language.ru, arguments),
-                TranslateUtil.getMessage(code, Language.en, arguments), person, HttpUtil.getServerAddress(request));
+        register(module, type, objectID, TranslateUtil.getSingleMessage(Language.kk, code, arguments), TranslateUtil.getSingleMessage(Language.ru, code, arguments),
+                TranslateUtil.getSingleMessage(Language.en, code, arguments), person, HttpUtil.getServerAddress(request));
     }
 
     public static void register(Module module, EventType type, Long objectID, String contentKK, String contentRU, String contentEN, Person person, HttpServletRequest request) {

@@ -24,7 +24,7 @@ public class IFileController {
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Response upload(@ModelAttribute MultipartFile file, @RequestHeader(name = "Language", defaultValue = "ru") Language language) {
         ResponseMessage message = new ResponseMessage();
-        fileService.save(file, message, language);
+        fileService.save(file, message);
         return Response.getResponse("message", message);
     }
 
@@ -39,7 +39,7 @@ public class IFileController {
     @PostMapping(value = "/{fileID}")
     public Response delete(@PathVariable("fileID") IFile file, @RequestHeader(name = "Language", defaultValue = "ru") Language language) {
         ResponseMessage message = new ResponseMessage();
-        fileService.delete(file, message, language);
+        fileService.delete(file, message);
         return Response.getResponse("message", message);
     }
 

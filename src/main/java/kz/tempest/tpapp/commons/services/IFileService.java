@@ -28,37 +28,37 @@ public class IFileService {
         }
     }
 
-    public IFile save(MultipartFile file, ResponseMessage message, Language language) {
+    public IFile save(MultipartFile file, ResponseMessage message) {
         try {
             if (file == null || file.isEmpty()) {
-                message.set(TranslateUtil.getMessage(CommonMessages.NO_RESOURCES_FOUND, language), RMStatus.ERROR);
+                message.set(TranslateUtil.getMessage(CommonMessages.NO_RESOURCES_FOUND), RMStatus.ERROR);
                 throw new FileNotFoundException();
             }
-            message.set(TranslateUtil.getMessage(CommonMessages.SUCCESSFULLY_SAVED, language), RMStatus.SUCCESS);
+            message.set(TranslateUtil.getMessage(CommonMessages.SUCCESSFULLY_SAVED), RMStatus.SUCCESS);
             return fileRepository.save(new IFile(file.getOriginalFilename(), file.getBytes()));
         } catch (Exception e) {
-            message.set(TranslateUtil.getMessage(CommonMessages.NO_RESOURCES_FOUND, language), RMStatus.ERROR);
+            message.set(TranslateUtil.getMessage(CommonMessages.NO_RESOURCES_FOUND), RMStatus.ERROR);
             LogUtil.write(e);
             return null;
         }
     }
 
-    public void delete(Long id, ResponseMessage message, Language language) {
+    public void delete(Long id, ResponseMessage message) {
         try {
             delete(get(id));
-            message.set(TranslateUtil.getMessage(CommonMessages.SUCCESSFULLY_DELETED, language), RMStatus.SUCCESS);
+            message.set(TranslateUtil.getMessage(CommonMessages.SUCCESSFULLY_DELETED), RMStatus.SUCCESS);
         } catch (Exception e) {
-            message.set(TranslateUtil.getMessage(CommonMessages.NO_RESOURCES_FOUND, language), RMStatus.SUCCESS);
+            message.set(TranslateUtil.getMessage(CommonMessages.NO_RESOURCES_FOUND), RMStatus.SUCCESS);
             LogUtil.write(e);
         }
     }
 
-    public void delete(IFile iFile, ResponseMessage message, Language language) {
+    public void delete(IFile iFile, ResponseMessage message) {
         try {
             delete(iFile);
-            message.set(TranslateUtil.getMessage(CommonMessages.SUCCESSFULLY_DELETED, language), RMStatus.SUCCESS);
+            message.set(TranslateUtil.getMessage(CommonMessages.SUCCESSFULLY_DELETED), RMStatus.SUCCESS);
         } catch (Exception e) {
-            message.set(TranslateUtil.getMessage(CommonMessages.NO_RESOURCES_FOUND, language), RMStatus.SUCCESS);
+            message.set(TranslateUtil.getMessage(CommonMessages.NO_RESOURCES_FOUND), RMStatus.SUCCESS);
             LogUtil.write(e);
         }
     }

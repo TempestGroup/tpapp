@@ -4,10 +4,11 @@ import kz.tempest.tpapp.commons.utils.TranslateUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 
 @Configuration
-public class TranslationConfig {
+public class AppConfig {
     @Bean
     public ResourceBundleMessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
@@ -16,5 +17,12 @@ public class TranslationConfig {
         messageSource.setUseCodeAsDefaultMessage(true);
         TranslateUtil.setMessageSource(messageSource);
         return messageSource;
+    }
+
+    @Bean
+    public LocalValidatorFactoryBean validator() {
+        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+        bean.setValidationMessageSource(messageSource());
+        return new LocalValidatorFactoryBean();
     }
 }

@@ -1,6 +1,7 @@
 package kz.tempest.tpapp.commons.utils;
 
 import lombok.SneakyThrows;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -8,6 +9,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class FileUtil {
+
+    public static final String FONTS_DIRECTORY = new ClassPathResource("/assets/fonts/").getPath();
 
     public static String getFileFormat(String filename) {
         if (filename == null || filename.lastIndexOf('.') == -1) {

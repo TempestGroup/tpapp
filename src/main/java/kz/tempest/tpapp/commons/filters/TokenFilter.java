@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kz.tempest.tpapp.commons.contexts.PersonContext;
 import kz.tempest.tpapp.commons.utils.TokenUtil;
 import kz.tempest.tpapp.modules.person.models.Person;
 import kz.tempest.tpapp.modules.person.services.PersonService;
@@ -34,8 +35,7 @@ public class TokenFilter extends OncePerRequestFilter {
             token = request.getHeader("Token");
         }
         if (!token.isEmpty() && TokenUtil.validateToken(token)) {
-            Person person = parse(token);
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(person, person.getUsername(), person.getRoles()));
+            PersonContext.setPerson(parse(token));
         }
         filterChain.doFilter(request, response);
     }

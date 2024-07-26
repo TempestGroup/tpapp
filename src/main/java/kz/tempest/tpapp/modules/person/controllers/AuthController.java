@@ -2,6 +2,9 @@ package kz.tempest.tpapp.modules.person.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import kz.tempest.tpapp.commons.contexts.LanguageContext;
+import kz.tempest.tpapp.commons.contexts.PersonContext;
 import kz.tempest.tpapp.commons.dtos.Response;
 import kz.tempest.tpapp.commons.dtos.ResponseMessage;
 import kz.tempest.tpapp.commons.enums.Language;
@@ -19,12 +22,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
+@Validated
 public class AuthController {
     private final PersonService personService;
     private final AuthenticationManager authenticationManager;
@@ -32,11 +37,12 @@ public class AuthController {
     @ResponseBody
     @PostMapping("/login")
     @PreAuthorize("isAnonymous()")
-    public Response login(@RequestHeader(value = "Language", defaultValue = "ru") Language language, @RequestBody LoginRequest loginRequest){
+    public Response login(@Valid @RequestBody LoginRequest loginRequest){
         Response response = new Response();
         Person person = personService.login(loginRequest, authenticationManager);
+        PersonContext.setPerson(person);
         TokenResponse token = new TokenResponse(person);
-        response.put("message", new ResponseMessage(TranslateUtil.getMessage(PersonMessages.SUCCESSFULLY_LOGIN, language), RMStatus.SUCCESS));
+        response.put("message", new ResponseMessage(TranslateUtil.getMessage(PersonMessages.SUCCESSFULLY_LOGIN), RMStatus.SUCCESS));
         response.put("token", token);
         return response;
     }
@@ -44,13 +50,13 @@ public class AuthController {
     @ResponseBody
     @PostMapping(value = "/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @PreAuthorize("isAnonymous()")
-    public Response register(HttpServletRequest request, @ModelAttribute RegisterRequest registerRequest, @RequestHeader(value = "Language", defaultValue = "ru") Language language) throws IOException {
+    public Response register(HttpServletRequest request, @ModelAttribute RegisterRequest registerRequest) throws IOException {
         ResponseMessage message = new ResponseMessage();
-        if (personService.register(registerRequest, message, language, request)) {
+        if (personService.register(registerRequest, message, request)) {
             return Response.getResponse("message", message);
         }
         return Response.getResponse("message", new ResponseMessage(TranslateUtil
-                .getMessage(PersonMessages.SIGN_UP_FAILED, language), RMStatus.ERROR));
+                .getMessage(PersonMessages.SIGN_UP_FAILED), RMStatus.ERROR));
     }
 
     @GetMapping("/images/{personID}")
