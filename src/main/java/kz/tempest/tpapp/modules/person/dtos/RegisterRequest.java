@@ -1,14 +1,19 @@
 package kz.tempest.tpapp.modules.person.dtos;
 
-import jakarta.annotation.Nullable;
+import kz.tempest.tpapp.commons.annotations.validation.Validation;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class RegisterRequest {
+    @Validation(nullable = true)
     private Long id = 0L;
+    @Validation(message = "username_is_incorrect_in_requirements", nullable = false, email = true)
     private String email;
+    @Validation(message = "password_is_incorrect_in_requirements", nullable = false, min = 6)
     private String password;
+    @Validation(nullable = true)
     private MultipartFile image;
+    @Validation(nullable = true)
     private boolean active = false;
 }

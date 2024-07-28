@@ -7,9 +7,11 @@ import kz.tempest.tpapp.commons.enums.Language;
 import kz.tempest.tpapp.commons.utils.ClassUtil;
 import kz.tempest.tpapp.commons.utils.TranslateUtil;
 
+import javax.annotation.processing.SupportedAnnotationTypes;
 import java.util.regex.Pattern;
 
-public class ValidationProvider implements ConstraintValidator<Validation, String> {
+@SupportedAnnotationTypes(value = ClassUtil.PACKAGE_PREFIX + ".*")
+public class ValidationProvider implements ConstraintValidator<Validation, Object> {
 
     private String message;
     private String messageKK;
@@ -35,13 +37,27 @@ public class ValidationProvider implements ConstraintValidator<Validation, Strin
     }
 
     @Override
-    public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
         if (value == null) {
             constraintValidatorContext.disableDefaultConstraintViolation();
             constraintValidatorContext.buildConstraintViolationWithTemplate(getErrorMessage())
                     .addConstraintViolation();
             return isNullable;
         }
+        if (value instanceof String s) {
+            return instanceValuePrimitive(s, constraintValidatorContext);
+        }
+        return true;
+    }
+
+    private String getErrorMessage() {
+        if (message == null || message.isEmpty()) {
+            return TranslateUtil.getMessage(messageKK, messageRU, messageEN);
+        }
+        return TranslateUtil.getMessage(message);
+    }
+
+    private boolean instanceValuePrimitive(String value, ConstraintValidatorContext constraintValidatorContext) {
         boolean valid = true;
         if (isEmail) {
             valid = EMAIL_PATTERN.matcher(value).matches();
@@ -58,12 +74,5 @@ public class ValidationProvider implements ConstraintValidator<Validation, Strin
                     .addConstraintViolation();
         }
         return valid;
-    }
-
-    private String getErrorMessage() {
-        if (message == null || message.isEmpty()) {
-            return TranslateUtil.getMessage(messageKK, messageRU, messageEN);
-        }
-        return TranslateUtil.getMessage(message);
     }
 }

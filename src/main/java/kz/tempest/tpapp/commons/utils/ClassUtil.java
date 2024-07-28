@@ -12,10 +12,15 @@ import java.util.Set;
 
 public class ClassUtil {
 
-    private static final String PACKAGE_PREFIX = "kz.tempest.tpapp";
+    public static final String PACKAGE_PREFIX = "kz.tempest.tpapp";
 
     public static Object getLocalizedFieldValue(Class objectClass, Object object, String fieldName, Language language) {
         return getFieldValue(objectClass, object, fieldName + language.suffix());
+    }
+
+    public static String getPackage(Class<?> clazz) {
+        Package p = clazz.getPackage();
+        return (clazz.getPackage() == null) ? "" : clazz.getPackage().getName();
     }
 
     public static Object getFieldValue(Class objectClass, Object object, String fieldName) {

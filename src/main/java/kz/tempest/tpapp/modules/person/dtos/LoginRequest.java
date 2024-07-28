@@ -9,6 +9,6 @@ import lombok.Data;
 public class LoginRequest {
     @Validation(message = "username_is_incorrect_in_requirements", nullable = false, email = true)
     private String username;
-    @Validation(message = "password_is_incorrect_in_requirements", nullable = false, min = 6, max = 255)
+    @Validation(message = "password_is_incorrect_in_requirements", nullable = false, min = 6)
     private String password;
 }
