@@ -50,7 +50,7 @@ public class AuthController {
     @ResponseBody
     @PostMapping(value = "/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @PreAuthorize("isAnonymous()")
-    public Response register(HttpServletRequest request, @ModelAttribute RegisterRequest registerRequest) throws IOException {
+    public Response register(HttpServletRequest request, @Valid @ModelAttribute RegisterRequest registerRequest) throws IOException {
         ResponseMessage message = new ResponseMessage();
         if (personService.register(registerRequest, message, request)) {
             return Response.getResponse("message", message);

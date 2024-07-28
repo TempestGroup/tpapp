@@ -18,8 +18,7 @@ public class LanguageFilter implements HandlerInterceptor {
         String code = request.getHeader("Language");
         if (code != null) {
             try {
-                Language language = Language.valueOf(code);
-                LanguageContext.setLanguage(language);
+                LanguageContext.setLanguage(Language.valueOf(code));
             } catch (Exception e) {
                 LanguageContext.setLanguage(DEFAULT_LANGUAGE);
             }
