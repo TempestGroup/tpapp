@@ -18,11 +18,4 @@ public class AppConfig {
         TranslateUtil.setMessageSource(messageSource);
         return messageSource;
     }
-
-    @Bean
-    public LocalValidatorFactoryBean validator() {
-        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-        bean.setValidationMessageSource(messageSource());
-        return new LocalValidatorFactoryBean();
-    }
 }
