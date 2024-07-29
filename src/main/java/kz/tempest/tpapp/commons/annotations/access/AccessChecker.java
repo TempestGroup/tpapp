@@ -15,5 +15,6 @@ public @interface AccessChecker {
     Module[] modules() default {};
     Extension[] extensions() default {};
     Role[] roles() default {};
+    boolean anonymous() default false;
 
 }

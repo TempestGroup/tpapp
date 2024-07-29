@@ -3,6 +3,7 @@ package kz.tempest.tpapp.modules.person.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import kz.tempest.tpapp.commons.annotations.access.AccessChecker;
 import kz.tempest.tpapp.commons.contexts.LanguageContext;
 import kz.tempest.tpapp.commons.contexts.PersonContext;
 import kz.tempest.tpapp.commons.dtos.Response;
@@ -36,7 +37,7 @@ public class AuthController {
 
     @ResponseBody
     @PostMapping("/login")
-    @PreAuthorize("isAnonymous()")
+    @AccessChecker(anonymous = true)
     public Response login(@Valid @RequestBody LoginRequest loginRequest){
         Response response = new Response();
         Person person = personService.login(loginRequest, authenticationManager);
@@ -49,7 +50,7 @@ public class AuthController {
 
     @ResponseBody
     @PostMapping(value = "/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    @PreAuthorize("isAnonymous()")
+    @AccessChecker(anonymous = true)
     public Response register(HttpServletRequest request, @Valid @ModelAttribute RegisterRequest registerRequest) throws IOException {
         ResponseMessage message = new ResponseMessage();
         if (personService.register(registerRequest, message, request)) {

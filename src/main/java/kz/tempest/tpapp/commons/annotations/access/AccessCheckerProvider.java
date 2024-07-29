@@ -19,11 +19,14 @@ public class AccessCheckerProvider {
 
     @Before(value = "@within(accessChecker) || @annotation(accessChecker)", argNames = "accessChecker")
     public void checkAccess(AccessChecker accessChecker) {
-        Person person = PersonContext.getCurrentPerson();
-        if (person == null) {
-            throw new UnauthorizedException("Unauthorized!");
-        }
         if (accessChecker != null) {
+            if (accessChecker.anonymous()) {
+                return;
+            }
+            Person person = PersonContext.getCurrentPerson();
+            if (person == null) {
+                throw new UnauthorizedException("Unauthorized!");
+            }
             boolean accessRight = checkAccess(accessChecker, person);
             if (!accessRight) {
                 throw new AccessDeniedException("Access denied!");
