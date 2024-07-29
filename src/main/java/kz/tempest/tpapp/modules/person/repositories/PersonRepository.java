@@ -14,8 +14,8 @@ import java.util.Optional;
 @Repository
 @EnableJpaRepositories
 public interface PersonRepository extends JpaRepository<Person, Long> {
-    @EntityGraph(attributePaths = {"roles"})
+    @EntityGraph(attributePaths = {"roles", "personModuleExtensionRights"})
     Optional<Person> findByEmail(String email);
-    @EntityGraph(attributePaths = {"roles"})
+    @EntityGraph(attributePaths = {"roles", "personModuleExtensionRights"})
     Page<Person> findAll(Specification<Person> specification, Pageable pageable);
 }

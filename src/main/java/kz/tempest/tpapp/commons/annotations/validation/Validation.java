@@ -18,6 +18,7 @@ public @interface Validation {
     String messageRU() default "";
     String messageEN() default "";
     boolean email() default false;
+    boolean phone() default false;
     boolean nullable() default true;
     int min() default 0;
     int max() default 0;

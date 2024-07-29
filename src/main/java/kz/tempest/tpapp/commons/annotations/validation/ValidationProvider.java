@@ -11,12 +11,14 @@ public class ValidationProvider implements ConstraintValidator<Validation, Objec
     private String messageKK;
     private String messageRU;
     private String messageEN;
+    private boolean isPhoneNumber;
     private boolean isEmail;
     private boolean isNullable;
     private int min;
     private int max;
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    private static final Pattern PHONE_NUMBER_PATTERN = Pattern.compile("^(\\+\\d{1,3}( )?)?\\d{10}$");
 
     @Override
     public void initialize(Validation constraintAnnotation) {
@@ -25,6 +27,7 @@ public class ValidationProvider implements ConstraintValidator<Validation, Objec
         this.messageRU = constraintAnnotation.messageRU();
         this.messageEN = constraintAnnotation.messageEN();
         this.isEmail = constraintAnnotation.email();
+        this.isPhoneNumber = constraintAnnotation.phone();
         this.isNullable = constraintAnnotation.nullable();
         this.min = constraintAnnotation.min();
         this.max = constraintAnnotation.max();
@@ -55,6 +58,9 @@ public class ValidationProvider implements ConstraintValidator<Validation, Objec
         boolean valid = true;
         if (isEmail) {
             valid = EMAIL_PATTERN.matcher(value).matches();
+        }
+        if (isPhoneNumber) {
+            valid = PHONE_NUMBER_PATTERN.matcher(value).matches();
         }
         if (min > 0) {
             valid = valid && value.length() >= min;

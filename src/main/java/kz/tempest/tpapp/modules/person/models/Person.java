@@ -128,5 +128,12 @@ public class Person implements UserDetails {
         return false;
     }
 
+    public boolean is(Role... roles) {
+        for (Role role : roles) {
+            return is(role);
+        }
+        return false;
+    }
+
 
 }

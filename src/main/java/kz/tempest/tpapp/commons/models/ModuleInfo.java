@@ -15,8 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ModuleInfo {
-    @Id
-    @Column(name = "module")
+    @Id @Column(name = "module")
     @Enumerated(EnumType.STRING)
     private Module module;
     @Lob
