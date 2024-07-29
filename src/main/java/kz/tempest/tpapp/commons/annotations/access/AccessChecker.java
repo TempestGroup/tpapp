@@ -3,7 +3,6 @@ package kz.tempest.tpapp.commons.annotations.access;
 import kz.tempest.tpapp.commons.enums.Extension;
 import kz.tempest.tpapp.commons.enums.Module;
 import kz.tempest.tpapp.modules.person.enums.Role;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

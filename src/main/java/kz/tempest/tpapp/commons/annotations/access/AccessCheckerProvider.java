@@ -7,9 +7,7 @@ import kz.tempest.tpapp.modules.person.models.Person;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.eclipse.angus.mail.iap.BadCommandException;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 
 @Aspect

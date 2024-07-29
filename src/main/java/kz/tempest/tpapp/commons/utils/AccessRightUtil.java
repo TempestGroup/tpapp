@@ -4,7 +4,6 @@ import kz.tempest.tpapp.commons.enums.Extension;
 import kz.tempest.tpapp.commons.enums.Module;
 import kz.tempest.tpapp.commons.enums.Right;
 import kz.tempest.tpapp.modules.person.models.Person;
-
 import java.util.Map;
 
 public class AccessRightUtil {
