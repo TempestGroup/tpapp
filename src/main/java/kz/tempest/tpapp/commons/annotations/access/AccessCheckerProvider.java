@@ -27,8 +27,7 @@ public class AccessCheckerProvider {
             if (person == null) {
                 throw new UnauthorizedException("Unauthorized!");
             }
-            boolean accessRight = checkAccess(accessChecker, person);
-            if (!accessRight) {
+            if (!checkAccess(accessChecker, person)) {
                 throw new AccessDeniedException("Access denied!");
             }
         }
