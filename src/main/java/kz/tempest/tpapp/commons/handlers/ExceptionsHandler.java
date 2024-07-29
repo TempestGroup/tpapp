@@ -8,9 +8,11 @@ import kz.tempest.tpapp.commons.dtos.Response;
 import kz.tempest.tpapp.commons.dtos.ResponseMessage;
 import kz.tempest.tpapp.commons.enums.Language;
 import kz.tempest.tpapp.commons.enums.RMStatus;
+import kz.tempest.tpapp.commons.exceptions.UnauthorizedException;
 import kz.tempest.tpapp.commons.utils.LogUtil;
 import kz.tempest.tpapp.commons.utils.StringUtil;
 import kz.tempest.tpapp.commons.utils.TranslateUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -34,10 +37,13 @@ import java.util.NoSuchElementException;
 public class ExceptionsHandler {
 
     @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public static ResponseEntity<Response> handleExceptions (HttpServletRequest request, HttpServletResponse response, Exception exception) {
         Object message;
         if (exception instanceof AccessDeniedException) {
             message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.ACCESS_DENIED), RMStatus.ERROR);
+        } else if(exception instanceof UnauthorizedException) {
+            message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.YOU_ARENT_AUTHORIZED), RMStatus.ERROR);
         } else if (exception instanceof DisabledException) {
             message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.USER_IS_DISABLED), RMStatus.ERROR);
         } else if (exception instanceof BadCredentialsException) {

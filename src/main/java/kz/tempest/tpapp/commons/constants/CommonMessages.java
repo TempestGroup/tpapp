@@ -13,6 +13,7 @@ public class CommonMessages {
     public static final String USER_NOT_FOUND = "user_not_found";
     public static final String USER_IS_NOT_EXIST = "user_is_not_exist";
     public static final String LANGUAGE_IS_NOT_EXIST = "language_is_not_exist";
+    public static final String YOU_ARENT_AUTHORIZED = "you_arent_authorized";
     public static final String SUCCESSFULLY_SAVED = "successfully_saved";
     public static final String SUCCESSFULLY_DELETED = "successfully_deleted";
     public static final String ERROR = "error";

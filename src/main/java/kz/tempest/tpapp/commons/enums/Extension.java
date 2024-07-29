@@ -1,5 +1,7 @@
 package kz.tempest.tpapp.commons.enums;
 
+import kz.tempest.tpapp.commons.utils.ClassUtil;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,4 +47,27 @@ public enum Extension {
         this.module = module;
     }
 
+    public static List<Extension> getByModule(Module module) {
+        return extensionsByModule.get(module);
+    }
+
+    public String getName(Language language) {
+        return (String) ClassUtil.getLocalizedFieldValue(getClass(), this, "name", language);
+    }
+
+    public String getNameKK() {
+        return nameKK;
+    }
+
+    public String getNameRU() {
+        return nameRU;
+    }
+
+    public String getNameEN() {
+        return nameEN;
+    }
+
+    public Module getModule() {
+        return module;
+    }
 }

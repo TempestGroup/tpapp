@@ -2,8 +2,8 @@ package kz.tempest.tpapp.modules.person.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import kz.tempest.tpapp.commons.enums.Extension;
 import kz.tempest.tpapp.commons.enums.Right;
-import kz.tempest.tpapp.commons.models.ExtensionInfo;
 import kz.tempest.tpapp.modules.person.converters.RolesConverter;
 import kz.tempest.tpapp.modules.person.enums.Role;
 import lombok.AllArgsConstructor;
@@ -47,10 +47,11 @@ public class Person implements UserDetails {
     @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "person_module_extension_rights", joinColumns = @JoinColumn(name = "person_id"))
-    @MapKeyJoinColumn(name = "extension")
+    @MapKeyColumn(name = "extension")
+    @MapKeyEnumerated(EnumType.STRING)
     @Column(name = "`right`")
     @Enumerated(EnumType.STRING)
-    private Map<ExtensionInfo, Right> personModuleExtensionRights = new HashMap<>();
+    private Map<Extension, Right> personModuleExtensionRights = new HashMap<>();
 
 
     public Person (String email, String password, byte[] image, List<Role> roles, boolean active) {

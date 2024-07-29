@@ -4,10 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import kz.tempest.tpapp.commons.dtos.PageObject;
 import kz.tempest.tpapp.commons.dtos.ResponseMessage;
 import kz.tempest.tpapp.commons.dtos.SearchFilter;
-import kz.tempest.tpapp.commons.enums.EventType;
-import kz.tempest.tpapp.commons.enums.Language;
+import kz.tempest.tpapp.commons.enums.*;
 import kz.tempest.tpapp.commons.enums.Module;
-import kz.tempest.tpapp.commons.enums.RMStatus;
 import kz.tempest.tpapp.commons.exceptions.UserExistException;
 import kz.tempest.tpapp.commons.utils.EventUtil;
 import kz.tempest.tpapp.commons.utils.LogUtil;
@@ -51,13 +49,20 @@ public class PersonService implements UserDetailsService {
         if (registerRequest.getImage() != null) {
             image = registerRequest.getImage().getBytes();
         }
-        Person person = personRepository.save(new Person(
+        Person person = new Person(
             registerRequest.getEmail(), passwordEncoder.encode(registerRequest.getPassword()),
-            image, List.of(Role.USER, Role.EMPLOYEE), registerRequest.isActive()
-        ));
+            image, List.of(Role.USER), registerRequest.isActive()
+        );
+        initAccessRights(person);
+        person = personRepository.save(person);
         EventUtil.register(Module.PERSON, EventType.CREATE, person.getID(), request, PersonMessages.REGISTERED_NEW_PERSON, person.getUsername(), person.getID());
         message.set(TranslateUtil.getMessage(PersonMessages.SUCCESSFULLY_REGISTERED), RMStatus.SUCCESS);
         return true;
+    }
+
+    private void initAccessRights(Person person) {
+        person.getPersonModuleExtensionRights().put(Extension.PERSON_SEARCH, Right.READ);
+        person.getPersonModuleExtensionRights().put(Extension.UPDATE_PERSON_SELF_PROFILE_DATA, Right.WRITE);
     }
 
     @Override

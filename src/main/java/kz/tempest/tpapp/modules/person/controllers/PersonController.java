@@ -4,6 +4,7 @@ import kz.tempest.tpapp.commons.annotations.access.AccessChecker;
 import kz.tempest.tpapp.commons.contexts.PersonContext;
 import kz.tempest.tpapp.commons.dtos.Response;
 import kz.tempest.tpapp.commons.dtos.SearchFilter;
+import kz.tempest.tpapp.commons.enums.Extension;
 import kz.tempest.tpapp.commons.enums.Language;
 import kz.tempest.tpapp.commons.enums.Module;
 import kz.tempest.tpapp.modules.person.dtos.PersonResponse;
@@ -22,14 +23,14 @@ public class PersonController {
 
     @ResponseBody
     @PostMapping("/")
-    @AccessChecker(modules = {Module.PERSON}, roles = {Role.EMPLOYEE})
+    @AccessChecker(extensions = { Extension.PERSON_SEARCH })
     public Response getPersons(@RequestHeader(value = "Language", defaultValue = "ru") Language language, @RequestBody SearchFilter searchFilter) {
         return Response.getResponse(personService.getPersons(searchFilter, PersonContext.getCurrentPerson(), language));
     }
 
     @ResponseBody
     @GetMapping("/{personID}")
-    @PreAuthorize("isAuthenticated()")
+    @AccessChecker(roles = { Role.USER })
     public Response getPerson(@PathVariable("personID") Person person, @RequestHeader(value = "Language", defaultValue = "ru") Language language) {
         return Response.getResponse("person", PersonResponse.from(person, language));
     }
