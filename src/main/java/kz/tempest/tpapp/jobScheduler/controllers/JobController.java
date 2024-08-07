@@ -1,8 +1,10 @@
 package kz.tempest.tpapp.jobScheduler.controllers;
 
+import kz.tempest.tpapp.commons.annotations.access.AccessChecker;
 import kz.tempest.tpapp.commons.dtos.Response;
 import kz.tempest.tpapp.jobScheduler.ScheduleRunner;
 import kz.tempest.tpapp.jobScheduler.dto.JobDTO;
+import kz.tempest.tpapp.modules.person.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -16,11 +18,14 @@ public class JobController {
 
     @ResponseBody
     @GetMapping("/get")
+    @AccessChecker(roles = { Role.ADMIN, Role.ANALYST, Role.DEVELOPER })
     public Response getJobs() {
         return Response.getResponse("list", scheduleRunner.getJobs());
     }
 
+    @ResponseBody
     @PostMapping("/save")
+    @AccessChecker(roles = { Role.ADMIN, Role.ANALYST, Role.DEVELOPER })
     public Response saveJobs(@RequestBody List<JobDTO> jobDTOs) {
         return Response.getResponse("message", scheduleRunner.updateJobs(jobDTOs));
     }
