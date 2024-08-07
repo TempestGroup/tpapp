@@ -39,7 +39,7 @@ public class ExceptionsHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public static ResponseEntity<Response> handleExceptions (HttpServletRequest request, HttpServletResponse response, Exception exception) {
-        Object message;
+        ResponseMessage message;
         if (exception instanceof AccessDeniedException) {
             message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.ACCESS_DENIED), RMStatus.ERROR);
         } else if(exception instanceof UnauthorizedException) {
@@ -67,10 +67,11 @@ public class ExceptionsHandler {
         } else if (exception instanceof InternalAuthenticationServiceException) {
             message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.USER_IS_NOT_EXIST), RMStatus.ERROR);
         } else if (exception instanceof MethodArgumentNotValidException methodArgumentNotValidException) {
-            message = new ArrayList<ResponseMessage>();
+            List<String> content = new ArrayList<>();
             methodArgumentNotValidException.getBindingResult().getFieldErrors().forEach(fieldError -> {
-                ((ArrayList<ResponseMessage>) message).add(new ResponseMessage(fieldError.getDefaultMessage(), RMStatus.ERROR));
+                content.add(fieldError.getDefaultMessage());
             });
+            message = new ResponseMessage(StringUtil.join(content, "\n"), RMStatus.ERROR);
         } else if (exception instanceof MethodArgumentTypeMismatchException) {
             message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.LANGUAGE_IS_NOT_EXIST), RMStatus.ERROR);
         } else if (exception instanceof NoSuchElementException) {

@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kz.tempest.tpapp.commons.annotations.access.AccessChecker;
+import kz.tempest.tpapp.commons.contexts.LanguageContext;
 import kz.tempest.tpapp.commons.contexts.PersonContext;
 import kz.tempest.tpapp.commons.dtos.Response;
 import kz.tempest.tpapp.commons.dtos.ResponseMessage;
@@ -11,6 +12,7 @@ import kz.tempest.tpapp.commons.enums.RMStatus;
 import kz.tempest.tpapp.commons.utils.TranslateUtil;
 import kz.tempest.tpapp.modules.person.constants.PersonMessages;
 import kz.tempest.tpapp.modules.person.dtos.LoginRequest;
+import kz.tempest.tpapp.modules.person.dtos.PersonResponse;
 import kz.tempest.tpapp.modules.person.dtos.RegisterRequest;
 import kz.tempest.tpapp.modules.person.dtos.TokenResponse;
 import kz.tempest.tpapp.modules.person.models.Person;
@@ -18,6 +20,7 @@ import kz.tempest.tpapp.modules.person.services.PersonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
@@ -37,7 +40,7 @@ public class AuthController {
         Response response = new Response();
         Person person = personService.login(loginRequest, authenticationManager);
         PersonContext.setPerson(person);
-        TokenResponse token = new TokenResponse(person);
+        TokenResponse token = new TokenResponse(person, loginRequest.isMobile());
         response.put("message", new ResponseMessage(TranslateUtil.getMessage(PersonMessages.SUCCESSFULLY_LOGIN), RMStatus.SUCCESS));
         response.put("token", token);
         return response;
@@ -53,6 +56,20 @@ public class AuthController {
         }
         return Response.getResponse("message", new ResponseMessage(TranslateUtil
                 .getMessage(PersonMessages.SIGN_UP_FAILED), RMStatus.ERROR));
+    }
+
+    @ResponseBody
+    @PostMapping("/refresh")
+    @AccessChecker(anonymous = false)
+    public Response refreshToken(Authentication auth){
+        return Response.getResponse("token", new TokenResponse(Person.getPerson(auth)));
+    }
+
+    @ResponseBody
+    @GetMapping("/info")
+    @AccessChecker(anonymous = false)
+    public Response info(Authentication auth){
+        return Response.getResponse("person", PersonResponse.from(Person.getPerson(auth), LanguageContext.getLanguage()));
     }
 
     @GetMapping("/images/{personID}")

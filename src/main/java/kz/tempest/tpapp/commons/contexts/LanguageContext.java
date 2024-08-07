@@ -1,6 +1,7 @@
 package kz.tempest.tpapp.commons.contexts;
 
 import kz.tempest.tpapp.commons.enums.Language;
+import kz.tempest.tpapp.commons.filters.LanguageFilter;
 
 public class LanguageContext {
 
@@ -11,7 +12,7 @@ public class LanguageContext {
     }
 
     public static Language getLanguage() {
-        return currentLanguage.get();
+        return currentLanguage.get() == null ? LanguageFilter.DEFAULT_LANGUAGE : currentLanguage.get();
     }
 
     public static void clear() {

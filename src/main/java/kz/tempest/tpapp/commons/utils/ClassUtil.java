@@ -56,7 +56,7 @@ public class ClassUtil {
             if (field.getName().equals(name)) {
                 return true;
             }
-            if (!field.getType().getPackageName().startsWith(PACKAGE_PREFIX) || !field.isAnnotationPresent(Embedded.class)) {
+            if (!field.isAnnotationPresent(Embedded.class)) {
                 continue;
             }
             if (hasField(field.getType(), name, visited)) {
@@ -75,7 +75,7 @@ public class ClassUtil {
             if (field.getName().equals(name)) {
                 return field.getName();
             }
-            if (!field.getType().getPackageName().startsWith(PACKAGE_PREFIX) || !field.isAnnotationPresent(Embedded.class)) {
+            if (!field.isAnnotationPresent(Embedded.class)) {
                 continue;
             }
             return field.getName() + "." + getFieldName(field.getType(), name, visited);

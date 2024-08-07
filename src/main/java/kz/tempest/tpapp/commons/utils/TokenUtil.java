@@ -23,8 +23,22 @@ public class TokenUtil {
                 .compact();
     }
 
+    public static String generateMobileToken(Map<String, String> claims){
+        return Jwts
+                .builder()
+                .setClaims(claims)
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .compact();
+    }
+
     public static String getAccessToken(String refreshToken){
         return refreshAccessToken(refreshToken);
+    }
+
+    public static String getMobileToken(String username) {
+        Map<String, String> claims = new HashMap<>();
+        claims.put("username", username);
+        return generateMobileToken(claims);
     }
 
     public static String generateRefreshToken(Map<String, String> claims){

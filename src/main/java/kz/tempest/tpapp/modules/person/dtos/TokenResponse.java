@@ -12,9 +12,19 @@ import lombok.NoArgsConstructor;
 public class TokenResponse {
     private String refreshToken;
     private String accessToken;
+    private String mobileToken = "";
 
     public TokenResponse(Person person) {
+        this(person, false);
+    }
+
+    public TokenResponse(Person person, boolean mobile) {
         this.refreshToken = TokenUtil.getRefreshToken(person.getUsername());
         this.accessToken = TokenUtil.getAccessToken(this.refreshToken);
+        if (mobile) {
+            this.mobileToken = TokenUtil.getMobileToken(person.getUsername());
+        } else {
+            this.mobileToken = "";
+        }
     }
 }

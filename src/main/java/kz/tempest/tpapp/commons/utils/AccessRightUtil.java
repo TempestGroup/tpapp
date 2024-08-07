@@ -16,7 +16,7 @@ public class AccessRightUtil {
                 }
             }
         }
-        return false;
+        return true;
     }
 
     public static boolean checkAccess(Person person, Extension... extensions) {
@@ -27,7 +27,7 @@ public class AccessRightUtil {
                 }
             }
         }
-        return false;
+        return true;
     }
 
 }
