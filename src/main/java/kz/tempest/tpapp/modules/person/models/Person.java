@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import kz.tempest.tpapp.commons.enums.Extension;
 import kz.tempest.tpapp.commons.enums.Right;
+import kz.tempest.tpapp.commons.utils.LogUtil;
 import kz.tempest.tpapp.modules.person.converters.RolesConverter;
 import kz.tempest.tpapp.modules.person.enums.Role;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 @Data
@@ -136,5 +139,21 @@ public class Person implements UserDetails {
         return false;
     }
 
-
+    public byte[] getImage() {
+        if (this.image == null) {
+            try {
+                InputStream inputStream = getClass().getResourceAsStream("/static/images/userDefLogo.png");
+                if (inputStream != null) {
+                    return inputStream.readAllBytes();
+                } else {
+                    return null;
+                }
+            } catch (IOException e) {
+                LogUtil.write(e);
+                return null;
+            }
+        } else {
+            return this.image;
+        }
+    }
 }
