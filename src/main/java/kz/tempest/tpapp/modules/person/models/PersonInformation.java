@@ -44,4 +44,8 @@ public class PersonInformation {
         return language == Language.en ? lastnameLatin : lastnameCyrillic;
     }
 
+    public String getFullname(Language language) {
+        return getName(language) + " " + getLastname(language);
+    }
+
 }
