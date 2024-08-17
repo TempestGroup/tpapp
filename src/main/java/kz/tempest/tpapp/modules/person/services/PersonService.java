@@ -1,6 +1,8 @@
 package kz.tempest.tpapp.modules.person.services;
 
 import jakarta.servlet.http.HttpServletRequest;
+import kz.tempest.tpapp.commons.constants.CommonMessages;
+import kz.tempest.tpapp.commons.contexts.PersonContext;
 import kz.tempest.tpapp.commons.dtos.PageObject;
 import kz.tempest.tpapp.commons.dtos.ResponseMessage;
 import kz.tempest.tpapp.commons.dtos.SearchFilter;
@@ -12,10 +14,12 @@ import kz.tempest.tpapp.commons.utils.LogUtil;
 import kz.tempest.tpapp.commons.utils.TranslateUtil;
 import kz.tempest.tpapp.modules.person.constants.PersonMessages;
 import kz.tempest.tpapp.modules.person.dtos.LoginRequest;
+import kz.tempest.tpapp.modules.person.dtos.PersonInformationDTO;
 import kz.tempest.tpapp.modules.person.dtos.PersonResponse;
 import kz.tempest.tpapp.modules.person.dtos.RegisterRequest;
 import kz.tempest.tpapp.modules.person.enums.Role;
 import kz.tempest.tpapp.modules.person.models.Person;
+import kz.tempest.tpapp.modules.person.models.PersonInformation;
 import kz.tempest.tpapp.modules.person.repositories.PersonRepository;
 import kz.tempest.tpapp.modules.person.specifications.PersonSpecification;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +30,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -65,6 +67,21 @@ public class PersonService implements UserDetailsService {
     private void initAccessRights(Person person) {
         person.getPersonModuleExtensionRights().put(Extension.PERSON_SEARCH, Right.READ);
         person.getPersonModuleExtensionRights().put(Extension.UPDATE_PERSON_SELF_PROFILE_DATA, Right.WRITE);
+    }
+
+    public ResponseMessage savePersonInformation(PersonInformationDTO personInformation, HttpServletRequest request) {
+        Person person = PersonContext.getCurrentPerson();
+        if (person != null) {
+            PersonInformation information = new PersonInformation(personInformation.getNameCyrillic(),
+                    personInformation.getNameLatin(), personInformation.getLastnameCyrillic(),
+                    personInformation.getLastnameLatin(), null, null ,
+                    personInformation.getPhoneNumber());
+            person.setInformation(information);
+            personRepository.save(person);
+            EventUtil.register(Module.PERSON, EventType.UPDATE, person.getID(), request, PersonMessages.UPDATED_PERSON_INFORMATION, person.getUsername(), person.getID());
+            return new ResponseMessage(TranslateUtil.getMessage(CommonMessages.SUCCESSFULLY_SAVED), RMStatus.SUCCESS);
+        }
+        return new ResponseMessage(TranslateUtil.getMessage(CommonMessages.ERROR), RMStatus.ERROR);
     }
 
     @Override

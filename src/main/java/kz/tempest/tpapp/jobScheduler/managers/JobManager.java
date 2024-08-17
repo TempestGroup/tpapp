@@ -15,39 +15,39 @@ import java.util.List;
 @Service
 public class JobManager {
 
-    private static JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     public JobManager(JdbcTemplate jdbcTemplate) {
-        JobManager.jdbcTemplate = jdbcTemplate;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    public static Job getJob(JobType type) {
+    public Job getJob(JobType type) {
         return jdbcTemplate.query("SELECT * FROM jobs WHERE type = ?", JobManager::mapRowToItem, type.name());
     }
 
-    public static int getJobCount() {
+    public int getJobCount() {
         return JobType.values().length;
     }
 
-    public static List<Job> getJobs() {
+    public List<Job> getJobs() {
         return jdbcTemplate.query("SELECT * FROM jobs WHERE type IN (" +
                 StringUtil.join(Arrays.stream(JobType.values()).map(type -> "'" + type.name() + "'").toList(), ", ")
                 + ")", JobManager::mapRowToList);
     }
 
-    public static boolean setJob(JobType type) {
+    public boolean setJob(JobType type) {
         return setJob(new Job(type, type.getNameKK(), type.getNameRU(), type.getNameEN(), type.getCron(), type.isActive()));
     }
 
-    public static boolean setJob(Job job) {
+    public boolean setJob(Job job) {
         String sql = "INSERT INTO jobs (type, name_kk, name_ru, name_en, cron, active) VALUES ('" + job.getType().name() + "'," +
-                " '" + job.getNameKK() + "', '" + job.getNameRU() + "', '" + job.getNameEN() + "', '" + job.getCron() + "', " + job.isActive() + ") ON CONFLICT (type) DO UPDATE " +
-                " SET name = EXCLUDED.name, cron = EXCLUDED.cron, active = EXCLUDED.active";
+                " '" + job.getNameKK() + "', '" + job.getNameRU() + "', '" + job.getNameEN() + "', '" + job.getCron() + "', " + job.isActive() + ") ON DUPLICATE KEY UPDATE " +
+                " name_kk = VALUES(name_kk), name_ru = VALUES(name_ru), name_en = VALUES(name_en), cron = VALUES(cron), active = VALUES(active)";
         jdbcTemplate.execute(sql);
         return true;
     }
 
-    public static boolean setJobs(List<JobDTO> jobs) {
+    public boolean setJobs(List<JobDTO> jobs) {
         boolean res = false;
         for (JobDTO job : jobs) {
             res = setJob(new Job(
@@ -90,7 +90,7 @@ public class JobManager {
         return jobs;
     }
 
-    public static void initJobs() {
+    public void initJobs() {
         for (JobType type : JobType.values()) {
             if (getJob(type) == null) {
                 setJob(type);

@@ -28,22 +28,24 @@ public class ScheduleRunner {
     private final Map<String, ScheduledFuture<?>> jobs = new HashMap<>();
     private final Map<String, String> cronExpressions = new HashMap<>();
     private final ApplicationContext context;
+    private final JobManager manager;
 
     @Autowired
-    public ScheduleRunner(ApplicationContext context) {
+    public ScheduleRunner(ApplicationContext context, JobManager manager) {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
         scheduler.setPoolSize(JobType.values().length);
         scheduler.initialize();
         this.taskScheduler = scheduler;
         this.context = context;
+        this.manager = manager;
     }
 
     public List<JobDTO> getJobs () {
-        return JobManager.getJobs().stream().map(JobDTO::from).toList();
+        return manager.getJobs().stream().map(JobDTO::from).toList();
     }
 
     public boolean saveJobs (List<JobDTO> jobDTOs) {
-        return JobManager.setJobs(jobDTOs);
+        return manager.setJobs(jobDTOs);
     }
 
     public void scheduleJob(String jobId, String cronExpression) {
@@ -57,7 +59,7 @@ public class ScheduleRunner {
     public ResponseMessage updateJobs(List<JobDTO> jobDTOs) {
         saveJobs(jobDTOs);
         for (JobType jobType : JobType.values()) {
-            Job job = JobManager.getJob(jobType);
+            Job job = manager.getJob(jobType);
             ScheduledFuture<?> future = jobs.get(jobType.name());
             if (future != null) {
                 future.cancel(true);
@@ -71,9 +73,9 @@ public class ScheduleRunner {
 
     @PostConstruct
     public void initializeJobs() {
-        JobManager.initJobs();
+        manager.initJobs();
         for (JobType jobType : JobType.values()) {
-            Job job = JobManager.getJob(jobType);
+            Job job = manager.getJob(jobType);
             if (job.isActive()) {
                 scheduleJob(jobType.name().toLowerCase(), job.getCron());
             }

@@ -15,28 +15,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PersonInformation {
     // name
-    @Column(name = "name_kk")
-    private String nameKK;
-    @Column(name = "name_ru")
-    private String nameRU;
-    @Column(name = "name_en")
-    private String nameEN;
+    @Column(name = "name_cyrillic")
+    private String nameCyrillic;
+    @Column(name = "name_latin")
+    private String nameLatin;
     // lastname
-    @Column(name = "lastname_kk")
-    private String lastnameKK;
-    @Column(name = "lastname_ru")
-    private String lastnameRU;
-    @Column(name = "lastname_en")
-    private String lastnameEN;
-    // surname
-    @Column(name = "surname_exist", columnDefinition = "TINYINT")
-    private boolean isSurnameExist = true;
-    @Column(name = "surname_kk")
-    private String surnameKK;
-    @Column(name = "surname_ru")
-    private String surnameRU;
-    @Column(name = "surname_en")
-    private String surnameEN;
+    @Column(name = "lastname_cyrillic")
+    private String lastnameCyrillic;
+    @Column(name = "lastname_latin")
+    private String lastnameLatin;
 
     @ManyToOne
     @JoinColumn(name = "city_id")
@@ -49,50 +36,12 @@ public class PersonInformation {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "iin_exist", columnDefinition = "TINYINT")
-    private boolean isIINExist = true;
-
-    @Column(name = "iin")
-    private String IIN;
-
     public String getName(Language language) {
-        return (String) ClassUtil.getLocalizedFieldValue(getClass(), this, "name", language);
+        return language == Language.en ? nameLatin : nameCyrillic;
     }
 
     public String getLastname(Language language) {
-        return (String) ClassUtil.getLocalizedFieldValue(getClass(), this, "lastname", language);
-    }
-
-    public String getSurname(Language language) {
-        return isSurnameExist ? (String) ClassUtil.getLocalizedFieldValue(getClass(), this, "surname", language) : "";
-    }
-
-    public void setSurnameKK(String surnameKK) {
-        if (isSurnameExist) {
-            this.surnameKK = surnameKK;
-        }
-    }
-
-    public void setSurnameRU(String surnameRU) {
-        if (isSurnameExist) {
-            this.surnameRU = surnameRU;
-        }
-    }
-
-    public void setSurnameEN(String surnameEN) {
-        if (isSurnameExist) {
-            this.surnameEN = surnameEN;
-        }
-    }
-
-    public String getIIN() {
-        return isIINExist ? IIN : "";
-    }
-
-    public void setIIN(String IIN) {
-        if (isIINExist) {
-            this.IIN = IIN;
-        }
+        return language == Language.en ? lastnameLatin : lastnameCyrillic;
     }
 
 }

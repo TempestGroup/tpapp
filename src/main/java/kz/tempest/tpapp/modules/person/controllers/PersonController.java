@@ -1,11 +1,14 @@
 package kz.tempest.tpapp.modules.person.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import kz.tempest.tpapp.commons.annotations.access.AccessChecker;
+import kz.tempest.tpapp.commons.contexts.LanguageContext;
 import kz.tempest.tpapp.commons.contexts.PersonContext;
 import kz.tempest.tpapp.commons.dtos.Response;
 import kz.tempest.tpapp.commons.dtos.SearchFilter;
 import kz.tempest.tpapp.commons.enums.Extension;
 import kz.tempest.tpapp.commons.enums.Language;
+import kz.tempest.tpapp.modules.person.dtos.PersonInformationDTO;
 import kz.tempest.tpapp.modules.person.dtos.PersonResponse;
 import kz.tempest.tpapp.modules.person.enums.Role;
 import kz.tempest.tpapp.modules.person.models.Person;
@@ -22,14 +25,29 @@ public class PersonController {
     @ResponseBody
     @PostMapping("/")
     @AccessChecker(extensions = { Extension.PERSON_SEARCH })
-    public Response getPersons(@RequestHeader(value = "Language", defaultValue = "ru") Language language, @RequestBody SearchFilter searchFilter) {
-        return Response.getResponse(personService.getPersons(searchFilter, PersonContext.getCurrentPerson(), language));
+    public Response getPersons(@RequestBody SearchFilter searchFilter) {
+        return Response.getResponse(personService.getPersons(searchFilter, PersonContext.getCurrentPerson(), LanguageContext.getLanguage()));
     }
+
+    @ResponseBody
+    @PostMapping("/save-person-information")
+    @AccessChecker(anonymous = false)
+    public Response savePersonInformation(@RequestBody PersonInformationDTO information, HttpServletRequest request) {
+        return Response.getResponse("message", personService.savePersonInformation(information, request));
+    }
+
+    @ResponseBody
+    @GetMapping("/get-person-information")
+    @AccessChecker(anonymous = false)
+    public Response getPersonInformation() {
+        return Response.getResponse("information", PersonInformationDTO.from(PersonContext.getCurrentPerson()));
+    }
+
 
     @ResponseBody
     @GetMapping("/{personID}")
     @AccessChecker(roles = { Role.USER })
-    public Response getPerson(@PathVariable("personID") Person person, @RequestHeader(value = "Language", defaultValue = "ru") Language language) {
-        return Response.getResponse("person", PersonResponse.from(person, language));
+    public Response getPerson(@PathVariable("personID") Person person) {
+        return Response.getResponse("person", PersonResponse.from(person, LanguageContext.getLanguage()));
     }
 }
