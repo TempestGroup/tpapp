@@ -2,12 +2,9 @@ package kz.tempest.tpapp.commons.sources;
 
 import kz.tempest.tpapp.commons.enums.Language;
 import kz.tempest.tpapp.commons.utils.LogUtil;
-import org.docx4j.org.apache.xml.serializer.Encodings;
 import org.springframework.context.support.AbstractMessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import javax.sound.sampled.AudioFormat;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.MessageFormat;
@@ -46,15 +43,5 @@ public class IMessageSource extends AbstractMessageSource {
             message = properties.getProperty(messageKey);
         }
         return new MessageFormat(message, locale);
-    }
-
-    public String[] getMessages(String code, Language language) {
-        String messageKey = code + "." + language.name();
-        String message = properties.getProperty(messageKey);
-        if (!StringUtils.hasText(message)) {
-            messageKey = code + "." + Language.ru.name();
-            message = properties.getProperty(messageKey);
-        }
-        return message.split("\n");
     }
 }

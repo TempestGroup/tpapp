@@ -16,6 +16,8 @@ import kz.tempest.tpapp.modules.person.services.PersonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/persons")
@@ -40,9 +42,8 @@ public class PersonController {
     @GetMapping("/get-person-information")
     @AccessChecker(anonymous = false)
     public Response getPersonInformation() {
-        return Response.getResponse("information", PersonInformationDTO.from(PersonContext.getCurrentPerson()));
+        return Response.getResponse("information", PersonInformationDTO.from(Objects.requireNonNull(PersonContext.getCurrentPerson())));
     }
-
 
     @ResponseBody
     @GetMapping("/{personID}")
