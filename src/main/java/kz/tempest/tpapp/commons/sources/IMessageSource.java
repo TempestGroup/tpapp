@@ -15,11 +15,13 @@ import java.util.Properties;
 public class IMessageSource extends AbstractMessageSource {
 
     private static final String DEFAULT_ENCODING = "UTF-8";
+    private static final String FILE_NAME = "messages";
+    private static final String FILE_EXTENSION = "properties";
     private final Properties properties;
 
     public IMessageSource() {
         properties = new Properties();
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("messages.properties")) {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(FILE_NAME + "." + FILE_EXTENSION)) {
             if (inputStream != null) {
                 try(InputStreamReader reader = new InputStreamReader(inputStream, DEFAULT_ENCODING)) {
                     properties.load(reader);

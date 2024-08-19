@@ -134,7 +134,9 @@ public class Person implements UserDetails {
 
     public boolean is(Role... roles) {
         for (Role role : roles) {
-            return is(role);
+            if (is(role)) {
+                return true;
+            }
         }
         return false;
     }
