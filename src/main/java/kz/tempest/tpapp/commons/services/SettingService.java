@@ -1,10 +1,12 @@
 package kz.tempest.tpapp.commons.services;
 
+import kz.tempest.tpapp.commons.constants.SettingKey;
 import kz.tempest.tpapp.commons.dtos.SettingResponse;
 import kz.tempest.tpapp.commons.enums.SettingType;
 import kz.tempest.tpapp.commons.models.Setting;
 import kz.tempest.tpapp.commons.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -16,17 +18,26 @@ import java.util.*;
 
 @Service @RequiredArgsConstructor
 public class SettingService {
-    private static @Lazy JdbcTemplate jdbcTemplate;
+    private static JdbcTemplate jdbcTemplate;
     public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    public static final String LIMIT_SPACE_DISK = "limit_space_disk";
+
+    @Autowired
+    public SettingService(JdbcTemplate jdbcTemplate) {
+        SettingService.jdbcTemplate = jdbcTemplate;
+    }
 
     public static Map<String, Setting> settings = new HashMap<>();
 
     private static void initMap() {
-        // Clear map
         settings.clear();
-        // Init map
-        settings.put(LIMIT_SPACE_DISK, new Setting(LIMIT_SPACE_DISK, "Дискілік кеңістікті шектеуі", "Ограничить дисковое пространство", "Limit disk space", 4));
+        settings.put(SettingKey.LIMIT_SPACE_DISK,
+            new Setting(SettingKey.LIMIT_SPACE_DISK,
+            "Дискілік кеңістікті шектеуі",
+            "Ограничить дисковое пространство",
+            "Limit disk space",
+            4
+            )
+        );
     }
 
     public static void initDB() {
