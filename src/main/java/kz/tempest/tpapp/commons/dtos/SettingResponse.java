@@ -13,13 +13,9 @@ import lombok.NoArgsConstructor;
 public class SettingResponse {
     private String key;
     private String name;
-    private String nameKK;
-    private String nameRU;
-    private String nameEN;
     private Object value;
 
     public static SettingResponse from(Setting setting, Language language) {
-        return new SettingResponse(setting.getCode(), setting.getName(language), setting.getNameKK(),
-                setting.getNameRU(), setting.getNameEN(), SettingService.getValue(setting));
+        return new SettingResponse(setting.getCode(), setting.getName(language), SettingService.getValue(setting));
     }
 }

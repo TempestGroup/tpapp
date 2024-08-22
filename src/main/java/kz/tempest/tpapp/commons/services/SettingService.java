@@ -74,9 +74,14 @@ public class SettingService {
 
     public static void setSettings(List<SettingResponse> settings) {
         for (SettingResponse setting : settings) {
-            setSettingValue(setting.getKey(), setting.getNameKK(), setting.getNameRU(),
-                    setting.getNameEN(), setting.getValue());
+            setSettingValue(setting);
         }
+    }
+
+    private static void setSettingValue(SettingResponse settingResponse) {
+        jdbcTemplate.execute("UPDATE settings SET value = '" + getValueString(settingResponse.getValue()) +
+                "', type = '" + getType(settingResponse.getValue()) + "' WHERE code = '" + settingResponse.getKey() + "'");
+        setInMap(getSettings(List.of(settingResponse.getKey())).get(0));
     }
 
     private static void setInMap(Setting setting) {
@@ -121,5 +126,33 @@ public class SettingService {
             return Arrays.stream(value.split(",\\s*")).toList();
         }
         return value;
+    }
+
+    private static String getValueString(Object value) {
+        if (value instanceof LocalDate) {
+            return ((LocalDate) value).format(SettingService.formatter);
+        }
+        return String.valueOf(value);
+    }
+
+    private static SettingType getType(Object value) {
+        if (value instanceof Integer) {
+            return SettingType.INTEGER;
+        } else if (value instanceof Double) {
+            return SettingType.DOUBLE;
+        } else if (value instanceof LocalDate) {
+            return SettingType.DATE;
+        } else if (value instanceof List<?> list) {
+            for (Object element : list) {
+                if (element instanceof Integer) {
+                    return SettingType.LIST_INTEGER;
+                } else if (element instanceof Double) {
+                    return SettingType.LIST_DOUBLE;
+                } else if (element instanceof String) {
+                    return SettingType.LIST_STRING;
+                }
+            }
+        }
+        return SettingType.STRING;
     }
 }
