@@ -18,21 +18,21 @@ public class EventUtil {
     }
     private static EventInfoService eventInfoService;
 
-    public static void register(Module module, EventType type, Long objectID, HttpServletRequest request, String code, Object... arguments) {
-        register(module, type, objectID, getPerson(), request, code, arguments);
+    public static void register(Module module, EventType type, Long objectID, String code, Object... arguments) {
+        register(module, type, objectID, getPerson(), code, arguments);
     }
 
-    public static void register(Module module, EventType type, Long objectID, String contentKK, String contentRU, String contentEN, HttpServletRequest request) {
-        register(module, type, objectID, contentKK, contentRU, contentEN, getPerson(), request);
+    public static void register(Module module, EventType type, Long objectID, String contentKK, String contentRU, String contentEN) {
+        register(module, type, objectID, contentKK, contentRU, contentEN, getPerson());
     }
 
-    public static void register(Module module, EventType type, Long objectID, Person person, HttpServletRequest request, String code, Object... arguments) {
+    public static void register(Module module, EventType type, Long objectID, Person person, String code, Object... arguments) {
         register(module, type, objectID, TranslateUtil.getSingleMessage(Language.kk, code, arguments), TranslateUtil.getSingleMessage(Language.ru, code, arguments),
-                TranslateUtil.getSingleMessage(Language.en, code, arguments), person, HttpUtil.getServerAddress(request));
+                TranslateUtil.getSingleMessage(Language.en, code, arguments), person, HttpUtil.getServerAddress());
     }
 
-    public static void register(Module module, EventType type, Long objectID, String contentKK, String contentRU, String contentEN, Person person, HttpServletRequest request) {
-        register(module, type, objectID, contentKK, contentRU, contentEN, person, HttpUtil.getServerAddress(request));
+    public static void register(Module module, EventType type, Long objectID, String contentKK, String contentRU, String contentEN, Person person) {
+        register(module, type, objectID, contentKK, contentRU, contentEN, person, HttpUtil.getServerAddress());
     }
 
     public static void register(Module module, EventType type, Long objectID, String contentKK, String contentRU, String contentEN, Person person, String host) {

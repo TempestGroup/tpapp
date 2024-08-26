@@ -1,18 +1,14 @@
 package kz.tempest.tpapp.commons.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.util.Objects;
 
+@Component
 public class HttpUtil {
-    public static String getClientIP() {
-        if (RequestContextHolder.getRequestAttributes() != null) {
-            return ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest().getRemoteAddr();
-        }
-        return "0.0.0.0";
-    }
 
     public static String getServerAddress() {
         if (RequestContextHolder.getRequestAttributes() != null) {

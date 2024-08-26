@@ -59,7 +59,7 @@ public class PersonService implements UserDetailsService {
         );
         initAccessRights(person);
         person = personRepository.save(person);
-        EventUtil.register(Module.PERSON, EventType.CREATE, person.getID(), request, PersonMessages.REGISTERED_NEW_PERSON, person.getUsername(), person.getID());
+        EventUtil.register(Module.PERSON, EventType.CREATE, person.getID(), PersonMessages.REGISTERED_NEW_PERSON, person.getUsername(), person.getID());
         message.set(TranslateUtil.getMessage(PersonMessages.SUCCESSFULLY_REGISTERED), RMStatus.SUCCESS);
         return true;
     }
@@ -78,7 +78,7 @@ public class PersonService implements UserDetailsService {
                     personInformation.getPhoneNumber());
             person.setInformation(information);
             personRepository.save(person);
-            EventUtil.register(Module.PERSON, EventType.UPDATE, person.getID(), request, PersonMessages.UPDATED_PERSON_INFORMATION, person.getUsername(), person.getID());
+            EventUtil.register(Module.PERSON, EventType.UPDATE, person.getID(), PersonMessages.UPDATED_PERSON_INFORMATION, person.getUsername(), person.getID());
             return new ResponseMessage(TranslateUtil.getMessage(CommonMessages.SUCCESSFULLY_SAVED), RMStatus.SUCCESS);
         }
         return new ResponseMessage(TranslateUtil.getMessage(CommonMessages.ERROR), RMStatus.ERROR);
