@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MenuItemResponse {
-    private Long id;
+    private Long id = 0L;
     private String name;
     private String nameKK;
     private String nameRU;
