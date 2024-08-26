@@ -81,11 +81,18 @@ public class SettingService {
     private static void setSettingValue(SettingResponse settingResponse) {
         jdbcTemplate.execute("UPDATE settings SET value = '" + getValueString(settingResponse.getValue()) +
                 "', type = '" + getType(settingResponse.getValue()) + "' WHERE code = '" + settingResponse.getKey() + "'");
-        setInMap(getSettings(List.of(settingResponse.getKey())).get(0));
+        setInMap(settingResponse);
     }
 
     private static void setInMap(Setting setting) {
         settings.put(setting.getCode(), setting);
+    }
+
+    private static void setInMap(SettingResponse settingResponse) {
+        Setting setting = settings.get(settingResponse.getKey());
+        setting.setValue(getValueString(settingResponse.getValue()));
+        setting.setType(getType(settingResponse.getValue()));
+        settings.put(settingResponse.getKey(), setting);
     }
 
     private static Setting mapRowToSetting(ResultSet rs) throws SQLException {
