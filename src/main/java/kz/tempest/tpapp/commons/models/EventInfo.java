@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import kz.tempest.tpapp.commons.enums.EventType;
 import kz.tempest.tpapp.commons.enums.Language;
+import kz.tempest.tpapp.commons.enums.Module;
 import kz.tempest.tpapp.commons.utils.ClassUtil;
 import kz.tempest.tpapp.modules.person.models.Person;
 import lombok.AllArgsConstructor;
@@ -22,8 +23,9 @@ public class EventInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ID;
+    @Column(name = "module")
     @Enumerated(EnumType.STRING)
-    private kz.tempest.tpapp.commons.enums.Module module;
+    private Module module;
     @JsonIgnore
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
@@ -45,7 +47,7 @@ public class EventInfo {
     @Column(name = "time")
     private LocalDateTime time = LocalDateTime.now(ZoneId.of("Asia/Almaty"));
 
-    public EventInfo (kz.tempest.tpapp.commons.enums.Module module, EventType type, Person person, Long objectID, String contentKK, String contentRU, String contentEN, String host) {
+    public EventInfo (Module module, EventType type, Person person, Long objectID, String contentKK, String contentRU, String contentEN, String host) {
         this.module = module;
         this.type = type;
         this.person = person;

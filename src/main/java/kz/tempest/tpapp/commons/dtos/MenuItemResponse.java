@@ -16,16 +16,17 @@ import java.util.List;
 public class MenuItemResponse {
     private Long id;
     private String name;
+    private String nameKK;
+    private String nameRU;
+    private String nameEN;
     private String link;
     private Module module;
+    private String mobileIcon;
+    private String webIcon;
     private String icon;
 
     public static MenuItemResponse from(MenuItem item, Language language) {
         return from(item, DeviceContext.isMobileDevice(), language);
-    }
-
-    public static MenuItemResponse from(MenuItem item, boolean isMobile, Language language) {
-        return new MenuItemResponse(item.getId(), item.getName(language), item.getLink(), item.getModule(), item.getIcon(isMobile));
     }
 
     public static List<MenuItemResponse> from(List<MenuItem> items, Language language) {
@@ -34,5 +35,12 @@ public class MenuItemResponse {
 
     public static List<MenuItemResponse> from(List<MenuItem> items, boolean isMobile, Language language) {
         return items.stream().map(item -> from(item, isMobile, language)).toList();
+    }
+
+    public static MenuItemResponse from(MenuItem item, boolean isMobile, Language language) {
+        return new MenuItemResponse(item.getId(), item.getName(language),
+                item.getNameKK(), item.getNameRU(), item.getNameEN(),
+                item.getLink(), item.getModule(), item.getMobileIcon(),
+                item.getWebIcon(), item.getIcon(isMobile));
     }
 }

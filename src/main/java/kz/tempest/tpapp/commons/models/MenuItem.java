@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import kz.tempest.tpapp.commons.enums.Language;
 import kz.tempest.tpapp.commons.enums.Module;
 import kz.tempest.tpapp.commons.utils.ClassUtil;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "menu_items")
 @Entity(name = "menu_items")
 @NoArgsConstructor
+@AllArgsConstructor
 public class MenuItem {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

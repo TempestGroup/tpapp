@@ -1,5 +1,6 @@
 package kz.tempest.tpapp.commons.controllers;
 
+import kz.tempest.tpapp.commons.contexts.LanguageContext;
 import kz.tempest.tpapp.commons.dtos.EventInfoResponse;
 import kz.tempest.tpapp.commons.dtos.Response;
 import kz.tempest.tpapp.commons.dtos.SearchFilter;
@@ -19,14 +20,14 @@ public class EventInfoController {
     @ResponseBody
     @PostMapping("/")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public Response getEvents(@RequestHeader(value = "Language", defaultValue = "ru") Language language, @RequestBody SearchFilter searchFilter) {
-        return Response.getResponse("events", eventInfoService.getEvents(searchFilter, language));
+    public Response getEvents(@RequestBody SearchFilter searchFilter) {
+        return Response.getResponse("events", eventInfoService.getEvents(searchFilter, LanguageContext.getLanguage()));
     }
 
     @ResponseBody
     @GetMapping("/{eventID}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public Response getEventByID(@RequestHeader(value = "Language", defaultValue = "ru") Language language, @PathVariable("eventID") EventInfo eventInfo) {
-        return Response.getResponse("event", EventInfoResponse.from(eventInfo, language));
+    public Response getEventByID(@PathVariable("eventID") EventInfo eventInfo) {
+        return Response.getResponse("event", EventInfoResponse.from(eventInfo, LanguageContext.getLanguage()));
     }
 }
