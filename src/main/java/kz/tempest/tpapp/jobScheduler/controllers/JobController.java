@@ -1,7 +1,7 @@
 package kz.tempest.tpapp.jobScheduler.controllers;
 
 import kz.tempest.tpapp.commons.annotations.access.AccessChecker;
-import kz.tempest.tpapp.commons.dtos.Response;
+import kz.tempest.tpapp.commons.configs.Response;
 import kz.tempest.tpapp.jobScheduler.ScheduleRunner;
 import kz.tempest.tpapp.jobScheduler.dto.JobDTO;
 import kz.tempest.tpapp.modules.person.enums.Role;

@@ -1,11 +1,12 @@
 package kz.tempest.tpapp.commons.controllers;
 
 import jakarta.servlet.http.HttpServletResponse;
-import kz.tempest.tpapp.commons.dtos.Response;
+import kz.tempest.tpapp.commons.configs.Response;
 import kz.tempest.tpapp.commons.dtos.ResponseMessage;
 import kz.tempest.tpapp.commons.enums.Language;
 import kz.tempest.tpapp.commons.models.IFile;
 import kz.tempest.tpapp.commons.services.IFileService;
+import kz.tempest.tpapp.commons.utils.ResponseUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class IFileController {
     public Response upload(@ModelAttribute MultipartFile file, @RequestHeader(name = "Language", defaultValue = "ru") Language language) {
         ResponseMessage message = new ResponseMessage();
         fileService.save(file, message);
-        return Response.getResponse("message", message);
+        return ResponseUtil.getResponse("message", message);
     }
 
     @ResponseBody
@@ -40,7 +41,7 @@ public class IFileController {
     public Response delete(@PathVariable("fileID") IFile file, @RequestHeader(name = "Language", defaultValue = "ru") Language language) {
         ResponseMessage message = new ResponseMessage();
         fileService.delete(file, message);
-        return Response.getResponse("message", message);
+        return ResponseUtil.getResponse("message", message);
     }
 
 }

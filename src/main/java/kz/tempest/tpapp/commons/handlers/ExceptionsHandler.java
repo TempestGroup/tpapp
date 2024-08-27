@@ -3,17 +3,15 @@ package kz.tempest.tpapp.commons.handlers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kz.tempest.tpapp.commons.constants.CommonMessages;
-import kz.tempest.tpapp.commons.contexts.LanguageContext;
-import kz.tempest.tpapp.commons.dtos.Response;
+import kz.tempest.tpapp.commons.configs.Response;
 import kz.tempest.tpapp.commons.dtos.ResponseMessage;
-import kz.tempest.tpapp.commons.enums.Language;
 import kz.tempest.tpapp.commons.enums.RMStatus;
 import kz.tempest.tpapp.commons.exceptions.UnauthorizedException;
 import kz.tempest.tpapp.commons.utils.LogUtil;
+import kz.tempest.tpapp.commons.utils.ResponseUtil;
 import kz.tempest.tpapp.commons.utils.StringUtil;
 import kz.tempest.tpapp.commons.utils.TranslateUtil;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -38,7 +36,7 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public static ResponseEntity<Response> handleExceptions (HttpServletRequest request, HttpServletResponse response, Exception exception) {
+    public static Response handleExceptions (HttpServletRequest request, HttpServletResponse response, Exception exception) {
         ResponseMessage message;
         if (exception instanceof AccessDeniedException) {
             message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.ACCESS_DENIED), RMStatus.ERROR);
@@ -80,7 +78,7 @@ public class ExceptionsHandler {
             message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.ERROR), RMStatus.ERROR);
         }
         LogUtil.write(exception);
-        return ResponseEntity.badRequest().body(Response.getResponse("message", message));
+        return ResponseUtil.getResponse("message", message);
     }
 
 }

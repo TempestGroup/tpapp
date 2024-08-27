@@ -1,6 +1,6 @@
 package kz.tempest.tpapp.integrations.gpt.controllers;
 
-import kz.tempest.tpapp.commons.dtos.Response;
+import kz.tempest.tpapp.commons.configs.Response;
 import kz.tempest.tpapp.integrations.gpt.services.GptService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
