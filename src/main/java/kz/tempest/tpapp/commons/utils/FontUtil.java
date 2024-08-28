@@ -4,17 +4,21 @@ import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.pdf.BaseFont;
 import fr.opensagres.xdocreport.itext.extension.font.IFontProvider;
+import org.springframework.core.io.ClassPathResource;
+
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
 public class FontUtil {
 
+    public static final String FONTS_DIRECTORY = new ClassPathResource("/assets/fonts/").getPath();
+
     public static IFontProvider getTimesNewRomanFontProvider() {
         return new IFontProvider() {
             @Override
             public Font getFont(String fontFamily, String encoding, float size, int style, Color color) {
-                String fontPath = FileUtil.FONTS_DIRECTORY + "TimesNewRoman/font.ttf";
+                String fontPath = FONTS_DIRECTORY + "TimesNewRoman/font.ttf";
                 return FontFactory.getFont(fontPath, BaseFont.IDENTITY_H, false, size, style, color);
             }
         };
@@ -24,7 +28,7 @@ public class FontUtil {
         return new IFontProvider() {
             @Override
             public Font getFont(String fontFamily, String encoding, float size, int style, Color color) {
-                String fontPath = FileUtil.FONTS_DIRECTORY + "Monoscape/font.ttf";
+                String fontPath = FONTS_DIRECTORY + "Monoscape/font.ttf";
                 return FontFactory.getFont(fontPath, BaseFont.IDENTITY_H, true, size, style, color);
             }
         };

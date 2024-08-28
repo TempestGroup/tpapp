@@ -1,5 +1,7 @@
 package kz.tempest.tpapp.commons.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.w3c.dom.Document;
@@ -261,5 +263,47 @@ public class MapperUtil {
             LogUtil.write(e);
             return null;
         }
+    }
+
+    private static String mapObjectToJson(Object obj) {
+        try {
+            if(obj == null) {
+                return null;
+            }
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.writeValueAsString(mapObjectToMap(obj, (Class<? extends Map<Object, Object>>) HashMap.class));
+        } catch (Exception e) {
+            LogUtil.write(e);
+            return null;
+        }
+    }
+
+    private static String mapObjectToXml(Object obj) {
+        try {
+            if(obj == null) {
+                return null;
+            }
+            XmlMapper objectMapper = new XmlMapper();
+            return objectMapper.writeValueAsString(mapObjectToMap(obj, (Class<? extends Map<Object, Object>>) HashMap.class));
+        } catch (Exception e) {
+            LogUtil.write(e);
+            return null;
+        }
+    }
+
+    public static String mapObjectTo(Object obj, MapType type) {
+        if (type == null) {
+            return null;
+        }
+        if (type == MapType.JSON) {
+            return mapObjectToJson(obj);
+        } else if (type == MapType.XML) {
+            return mapObjectToXml(obj);
+        }
+        return null;
+    }
+
+    public enum MapType {
+        JSON, XML;
     }
 }
