@@ -43,6 +43,9 @@ public class IMessageSource extends AbstractMessageSource {
         if (!StringUtils.hasText(message)) {
             messageKey = code + "." + Language.ru.name();
             message = properties.getProperty(messageKey);
+            if (!StringUtils.hasText(message)) {
+                message = code;
+            }
         }
         return new MessageFormat(message, locale);
     }

@@ -270,8 +270,9 @@ public class MapperUtil {
             if(obj == null) {
                 return null;
             }
+            Class<? extends Map<Object, Object>> mapClass = (Class<? extends Map<Object, Object>>) (Class<?>) HashMap.class;
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.writeValueAsString(mapObjectToMap(obj, (Class<? extends Map<Object, Object>>) HashMap.class));
+            return objectMapper.writeValueAsString(mapObjectToMap(obj, mapClass));
         } catch (Exception e) {
             LogUtil.write(e);
             return null;
@@ -283,8 +284,9 @@ public class MapperUtil {
             if(obj == null) {
                 return null;
             }
+            Class<? extends Map<Object, Object>> mapClass = (Class<? extends Map<Object, Object>>) (Class<?>) HashMap.class;
             XmlMapper objectMapper = new XmlMapper();
-            return objectMapper.writeValueAsString(mapObjectToMap(obj, (Class<? extends Map<Object, Object>>) HashMap.class));
+            return objectMapper.writeValueAsString(mapObjectToMap(obj, mapClass));
         } catch (Exception e) {
             LogUtil.write(e);
             return null;

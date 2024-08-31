@@ -2,6 +2,7 @@ package kz.tempest.tpapp.jobScheduler.controllers;
 
 import kz.tempest.tpapp.commons.annotations.access.AccessChecker;
 import kz.tempest.tpapp.commons.configs.Response;
+import kz.tempest.tpapp.commons.utils.ResponseUtil;
 import kz.tempest.tpapp.jobScheduler.ScheduleRunner;
 import kz.tempest.tpapp.jobScheduler.dto.JobDTO;
 import kz.tempest.tpapp.modules.person.enums.Role;
@@ -20,13 +21,13 @@ public class JobController {
     @GetMapping("/get")
     @AccessChecker(roles = { Role.ADMIN, Role.ANALYST, Role.DEVELOPER })
     public Response getJobs() {
-        return Response.getResponse("list", scheduleRunner.getJobs());
+        return ResponseUtil.getResponse("list", scheduleRunner.getJobs());
     }
 
     @ResponseBody
     @PostMapping("/save")
     @AccessChecker(roles = { Role.ADMIN, Role.ANALYST, Role.DEVELOPER })
     public Response saveJobs(@RequestBody List<JobDTO> jobDTOs) {
-        return Response.getResponse("message", scheduleRunner.updateJobs(jobDTOs));
+        return ResponseUtil.getResponse("message", scheduleRunner.updateJobs(jobDTOs));
     }
 }
