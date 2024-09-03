@@ -20,7 +20,7 @@ public class DeviceFilter implements HandlerInterceptor {
         String type = request.getHeader("Device-Type");
         if (type != null) {
             try {
-                DeviceContext.setDeviceType(DeviceType.valueOf(type.toUpperCase()));
+                DeviceContext.setDeviceType(DeviceType.valueOf(type));
             } catch (Exception e) {
                 DeviceContext.setDeviceType(DEFAULT_TYPE);
             }
