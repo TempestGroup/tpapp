@@ -6,10 +6,12 @@ import kz.tempest.tpapp.commons.contexts.DeviceContext;
 import kz.tempest.tpapp.commons.contexts.LanguageContext;
 import kz.tempest.tpapp.commons.enums.DeviceType;
 import kz.tempest.tpapp.commons.enums.Language;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Locale;
 
+@Component
 public class DeviceFilter implements HandlerInterceptor {
 
     public static final DeviceType DEFAULT_TYPE = DeviceType.WEB;

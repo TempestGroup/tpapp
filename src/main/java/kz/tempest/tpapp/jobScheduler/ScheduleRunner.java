@@ -40,11 +40,11 @@ public class ScheduleRunner {
         this.manager = manager;
     }
 
-    public List<JobDTO> getJobs () {
+    public List<JobDTO> getJobs() {
         return manager.getJobs().stream().map(JobDTO::from).toList();
     }
 
-    public boolean saveJobs (List<JobDTO> jobDTOs) {
+    public boolean saveJobs(List<JobDTO> jobDTOs) {
         return manager.setJobs(jobDTOs);
     }
 
