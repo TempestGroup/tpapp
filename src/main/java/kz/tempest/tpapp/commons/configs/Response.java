@@ -1,19 +1,25 @@
 package kz.tempest.tpapp.commons.configs;
 
+import io.jsonwebtoken.Header;
 import kz.tempest.tpapp.commons.utils.MapperUtil;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.util.MultiValueMap;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Response extends ResponseEntity<Object> {
 
-    public Response(Object object) {
-        super(object, HttpStatus.OK);
+    public Response(Object body) {
+        super(body, defaultHeaders(), HttpStatus.OK);
+    }
+
+    private static HttpHeaders defaultHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return headers;
     }
 
     public Response(HttpStatusCode status) {

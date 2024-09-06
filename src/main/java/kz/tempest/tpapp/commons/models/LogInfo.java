@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Data
-@Table()
+@Table(name = "log_infos")
 @Entity(name = "log_infos")
 @NoArgsConstructor
 public class LogInfo {
@@ -19,7 +19,7 @@ public class LogInfo {
     private Long ID;
     @Column(name = "date_time", columnDefinition = "TIMESTAMP")
     private LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Almaty"));
-    @Column(name = "content", columnDefinition = "TEXT")
+    @Column(name = "content", columnDefinition = "LONGTEXT")
     private String content;
     @Column(name = "type")
     @Enumerated(EnumType.STRING)

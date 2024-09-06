@@ -11,8 +11,7 @@ import kz.tempest.tpapp.commons.utils.LogUtil;
 import kz.tempest.tpapp.commons.utils.ResponseUtil;
 import kz.tempest.tpapp.commons.utils.StringUtil;
 import kz.tempest.tpapp.commons.utils.TranslateUtil;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,11 +23,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -36,8 +33,7 @@ import java.util.NoSuchElementException;
 public class ExceptionsHandler {
 
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public static Response handleExceptions (HttpServletRequest request, HttpServletResponse response, Exception exception) {
+    public Response handleExceptions (HttpServletRequest request, HttpServletResponse response, Exception exception) {
         ResponseMessage message;
         if (exception instanceof AccessDeniedException) {
             message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.ACCESS_DENIED), RMStatus.ERROR);
@@ -66,10 +62,8 @@ public class ExceptionsHandler {
         } else if (exception instanceof InternalAuthenticationServiceException) {
             message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.USER_IS_NOT_EXIST), RMStatus.ERROR);
         } else if (exception instanceof MethodArgumentNotValidException methodArgumentNotValidException) {
-            List<String> content = new ArrayList<>();
-            methodArgumentNotValidException.getBindingResult().getFieldErrors().forEach(fieldError -> {
-                content.add(fieldError.getDefaultMessage());
-            });
+            List<String> content = methodArgumentNotValidException.getBindingResult().getFieldErrors()
+                    .stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
             message = new ResponseMessage(StringUtil.join(content, "\n"), RMStatus.ERROR);
         } else if (exception instanceof MethodArgumentTypeMismatchException) {
             message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.LANGUAGE_IS_NOT_EXIST), RMStatus.ERROR);
