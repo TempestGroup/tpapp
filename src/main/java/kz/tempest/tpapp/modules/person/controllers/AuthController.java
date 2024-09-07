@@ -53,13 +53,17 @@ public class AuthController {
     @ResponseBody
     @PostMapping(value = "/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @AccessChecker(anonymous = true)
-    public Response register(HttpServletRequest request, @Valid @ModelAttribute RegisterRequest registerRequest) throws IOException {
+    public Response register(HttpServletRequest request, @Valid @ModelAttribute RegisterRequest registerRequest) {
         ResponseMessage message = new ResponseMessage();
         if (personService.register(registerRequest, message, request)) {
             return ResponseUtil.getResponse("message", message);
         }
-        return ResponseUtil.getResponse("message", new ResponseMessage(TranslateUtil
-                .getMessage(PersonMessages.SIGN_UP_FAILED), RMStatus.ERROR));
+        return ResponseUtil.getResponse("message",
+            new ResponseMessage(
+                TranslateUtil.getMessage(PersonMessages.SIGN_UP_FAILED),
+                RMStatus.ERROR
+            )
+        );
     }
 
     @ResponseBody

@@ -1,6 +1,7 @@
 package kz.tempest.tpapp.commons.contexts;
 
 import kz.tempest.tpapp.commons.enums.Language;
+import kz.tempest.tpapp.commons.utils.StringUtil;
 import kz.tempest.tpapp.modules.person.models.Person;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,20 +16,12 @@ public class PersonContext {
     }
 
     public static boolean isAuthenticated() {
-        if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            return false;
-        }
-        if (SecurityContextHolder.getContext().getAuthentication().getCredentials().equals("")) {
-            return false;
-        }
-        return true;
+        return !(SecurityContextHolder.getContext().getAuthentication() == null ||
+                StringUtil.isEmpty((String)SecurityContextHolder.getContext().getAuthentication().getCredentials()));
     }
 
     public static Person getCurrentPerson() {
-        if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            return null;
-        }
-        if (SecurityContextHolder.getContext().getAuthentication().getCredentials().equals("")) {
+        if (!isAuthenticated()) {
             return null;
         }
         return Person.getPerson(SecurityContextHolder.getContext().getAuthentication());

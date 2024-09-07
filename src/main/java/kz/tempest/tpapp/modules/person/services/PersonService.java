@@ -10,6 +10,7 @@ import kz.tempest.tpapp.commons.enums.*;
 import kz.tempest.tpapp.commons.enums.Module;
 import kz.tempest.tpapp.commons.exceptions.UserExistException;
 import kz.tempest.tpapp.commons.utils.EventUtil;
+import kz.tempest.tpapp.commons.utils.HttpUtil;
 import kz.tempest.tpapp.commons.utils.LogUtil;
 import kz.tempest.tpapp.commons.utils.TranslateUtil;
 import kz.tempest.tpapp.modules.person.constants.PersonMessages;
@@ -42,26 +43,31 @@ public class PersonService implements UserDetailsService {
         return Person.getPerson(authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())));
     }
 
-    public boolean register(RegisterRequest registerRequest, ResponseMessage message, HttpServletRequest request) throws IOException {
-        if (personRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
-            message.set(TranslateUtil.getMessage(PersonMessages.USER_EXIST), RMStatus.ERROR);
-            LogUtil.write(new UserExistException());
+    public boolean register(RegisterRequest registerRequest, ResponseMessage message, HttpServletRequest request) {
+        try {
+            if (personRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
+                message.set(TranslateUtil.getMessage(PersonMessages.USER_EXIST), RMStatus.ERROR);
+                LogUtil.write(new UserExistException());
+                return false;
+            }
+            //emailService.send(ConstantsUtil.getHostName() + "/api/v1/auth/confirm/" + TokenUtil.getRefreshToken(createUserRequest.getUsername()), createUserRequest.getEmail());
+            byte[] image = null;
+            if (registerRequest.getImage() != null) {
+                image = registerRequest.getImage().getBytes();
+            }
+            Person person = new Person(
+                    registerRequest.getEmail(), passwordEncoder.encode(registerRequest.getPassword()),
+                    image, List.of(Role.USER), registerRequest.isActive()
+            );
+            initAccessRights(person);
+            person = personRepository.save(person);
+            EventUtil.register(Module.PERSON, EventType.CREATE, person.getID(), PersonMessages.REGISTERED_NEW_PERSON, request, person.getUsername(), person.getID());
+            message.set(TranslateUtil.getMessage(PersonMessages.SUCCESSFULLY_REGISTERED), RMStatus.SUCCESS);
+            return true;
+        } catch (Exception e) {
+            LogUtil.write(e);
             return false;
         }
-        //emailService.send(ConstantsUtil.getHostName() + "/api/v1/auth/confirm/" + TokenUtil.getRefreshToken(createUserRequest.getUsername()), createUserRequest.getEmail());
-        byte[] image = null;
-        if (registerRequest.getImage() != null) {
-            image = registerRequest.getImage().getBytes();
-        }
-        Person person = new Person(
-            registerRequest.getEmail(), passwordEncoder.encode(registerRequest.getPassword()),
-            image, List.of(Role.USER), registerRequest.isActive()
-        );
-        initAccessRights(person);
-        person = personRepository.save(person);
-        EventUtil.register(Module.PERSON, EventType.CREATE, person.getID(), PersonMessages.REGISTERED_NEW_PERSON, person.getUsername(), person.getID());
-        message.set(TranslateUtil.getMessage(PersonMessages.SUCCESSFULLY_REGISTERED), RMStatus.SUCCESS);
-        return true;
     }
 
     private void initAccessRights(Person person) {
@@ -78,7 +84,7 @@ public class PersonService implements UserDetailsService {
                     personInformation.getPhoneNumber());
             person.setInformation(information);
             personRepository.save(person);
-            EventUtil.register(Module.PERSON, EventType.UPDATE, person.getID(), PersonMessages.UPDATED_PERSON_INFORMATION, person.getUsername(), person.getID());
+            EventUtil.register(Module.PERSON, EventType.UPDATE, person.getID(), PersonMessages.UPDATED_PERSON_INFORMATION, request, person.getUsername(), person.getID());
             return new ResponseMessage(TranslateUtil.getMessage(CommonMessages.SUCCESSFULLY_SAVED), RMStatus.SUCCESS);
         }
         return new ResponseMessage(TranslateUtil.getMessage(CommonMessages.ERROR), RMStatus.ERROR);

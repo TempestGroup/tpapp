@@ -1,6 +1,7 @@
 package kz.tempest.tpapp.commons.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
+import kz.tempest.tpapp.commons.contexts.PersonContext;
 import kz.tempest.tpapp.commons.enums.EventType;
 import kz.tempest.tpapp.commons.enums.Language;
 import kz.tempest.tpapp.commons.models.EventInfo;
@@ -18,32 +19,24 @@ public class EventUtil {
     }
     private static EventInfoService eventInfoService;
 
-    public static void register(Module module, EventType type, Long objectID, String code, Object... arguments) {
-        register(module, type, objectID, getPerson(), code, arguments);
+    public static void register(Module module, EventType type, Long objectID, String code, HttpServletRequest request, Object... arguments) {
+        register(module, type, objectID, PersonContext.getCurrentPerson(), code, request, arguments);
     }
 
-    public static void register(Module module, EventType type, Long objectID, String contentKK, String contentRU, String contentEN) {
-        register(module, type, objectID, contentKK, contentRU, contentEN, getPerson());
+    public static void register(Module module, EventType type, Long objectID, String contentKK, String contentRU, String contentEN, HttpServletRequest request) {
+        register(module, type, objectID, contentKK, contentRU, contentEN, PersonContext.getCurrentPerson(), request);
     }
 
-    public static void register(Module module, EventType type, Long objectID, Person person, String code, Object... arguments) {
+    public static void register(Module module, EventType type, Long objectID, Person person, String code, HttpServletRequest request, Object... arguments) {
         register(module, type, objectID, TranslateUtil.getSingleMessage(Language.kk, code, arguments), TranslateUtil.getSingleMessage(Language.ru, code, arguments),
-                TranslateUtil.getSingleMessage(Language.en, code, arguments), person, HttpUtil.getServerAddress());
+                TranslateUtil.getSingleMessage(Language.en, code, arguments), person, HttpUtil.getServerAddress(request));
     }
 
-    public static void register(Module module, EventType type, Long objectID, String contentKK, String contentRU, String contentEN, Person person) {
-        register(module, type, objectID, contentKK, contentRU, contentEN, person, HttpUtil.getServerAddress());
+    public static void register(Module module, EventType type, Long objectID, String contentKK, String contentRU, String contentEN, Person person, HttpServletRequest request) {
+        register(module, type, objectID, contentKK, contentRU, contentEN, person, HttpUtil.getServerAddress(request));
     }
 
     public static void register(Module module, EventType type, Long objectID, String contentKK, String contentRU, String contentEN, Person person, String host) {
         eventInfoService.create(new EventInfo(module, type, person, objectID, contentKK, contentRU, contentEN, host));
-    }
-
-    private static Person getPerson() {
-        Person person = null;
-        if (SecurityContextHolder.getContext().getAuthentication() != null && !SecurityContextHolder.getContext().getAuthentication().getCredentials().equals("")) {
-            person = Person.getPerson(SecurityContextHolder.getContext().getAuthentication());
-        }
-        return person;
     }
 }

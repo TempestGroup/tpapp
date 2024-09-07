@@ -22,10 +22,7 @@ public class LogUtil {
     private static final Logger logger = LoggerFactory.getLogger("TempestApp");
 
     public static void write(String content, LogType type) {
-        Person person = null;
-        if (PersonContext.isAuthenticated()) {
-            person = PersonContext.getCurrentPerson();
-        }
+        Person person = PersonContext.getCurrentPerson();
         logInfoService.create(new LogInfo(content, type, person));
         if (type == LogType.INFO) {
             logger.info(content);
@@ -37,10 +34,7 @@ public class LogUtil {
     }
 
     public static void write(Exception exception) {
-        Person person = null;
-        if (SecurityContextHolder.getContext().getAuthentication() != null && !SecurityContextHolder.getContext().getAuthentication().getCredentials().equals("")) {
-            person = Person.getPerson(SecurityContextHolder.getContext().getAuthentication());
-        }
+        Person person = PersonContext.getCurrentPerson();
         logInfoService.create(new LogInfo(exception.getMessage(), LogType.ERROR, person));
         exception.printStackTrace();
     }
