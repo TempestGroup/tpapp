@@ -1,6 +1,7 @@
 package kz.tempest.tpapp.commons.controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kz.tempest.tpapp.commons.annotations.access.AccessChecker;
 import kz.tempest.tpapp.commons.contexts.LanguageContext;
 import kz.tempest.tpapp.commons.dtos.EventInfoResponse;
 import kz.tempest.tpapp.commons.dtos.JSONResponse;
@@ -9,6 +10,7 @@ import kz.tempest.tpapp.commons.dtos.SearchFilter;
 import kz.tempest.tpapp.commons.models.EventInfo;
 import kz.tempest.tpapp.commons.services.EventInfoService;
 import kz.tempest.tpapp.commons.utils.ResponseUtil;
+import kz.tempest.tpapp.modules.person.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,14 +24,14 @@ public class EventInfoController {
 
     @ResponseBody
     @PostMapping("/")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @AccessChecker(roles = { Role.ADMIN })
     public Response getEvents(@RequestBody SearchFilter searchFilter) {
         return ResponseUtil.getResponse(JSONResponse.getResponse("events", eventInfoService.getEvents(searchFilter, LanguageContext.getLanguage())));
     }
 
     @ResponseBody
     @GetMapping("/{eventID}")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @AccessChecker(roles = { Role.ADMIN })
     public Response getEventByID(@PathVariable("eventID") EventInfo eventInfo) {
         return ResponseUtil.getResponse(JSONResponse.getResponse("event", EventInfoResponse.from(eventInfo, LanguageContext.getLanguage())));
     }
