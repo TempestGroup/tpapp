@@ -16,8 +16,9 @@ public class SearchFilter extends PageFilter {
 
     public Pageable getPageable(Class iClass, Language language) {
         return PageRequest.of(
-                getPageNumber() - 1,
-                getCountInPage(),
-                Sort.by(SortUtil.getSortOrders(iClass, getSort(), language)));
+            getPageNumber() - 1,
+            getCountInPage(),
+            Sort.by(SortUtil.getSortOrders(iClass, sort, language))
+        );
     }
 }
