@@ -1,5 +1,6 @@
 package kz.tempest.tpapp.modules.person.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -31,6 +32,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
 @Validated
+@Tag(name = "Auth APIs", description = "API for authentication")
 public class AuthController {
     private final PersonService personService;
     private final AuthenticationManager authenticationManager;

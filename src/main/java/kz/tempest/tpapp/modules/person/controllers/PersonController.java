@@ -1,5 +1,6 @@
 package kz.tempest.tpapp.modules.person.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import kz.tempest.tpapp.commons.annotations.access.AccessChecker;
 import kz.tempest.tpapp.commons.contexts.LanguageContext;
@@ -21,6 +22,7 @@ import java.util.Objects;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/persons")
+@Tag(name = "Person APIs", description = "API for person data")
 public class PersonController {
     private final PersonService personService;
 

@@ -1,5 +1,6 @@
 package kz.tempest.tpapp.commons.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.tempest.tpapp.commons.annotations.access.AccessChecker;
 import kz.tempest.tpapp.commons.contexts.LanguageContext;
 import kz.tempest.tpapp.commons.contexts.PersonContext;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/menus")
 @RequiredArgsConstructor
+@Tag(name = "Menu APIs", description = "API for module menu")
 public class MenuController {
     private final MenuItemService service;
 

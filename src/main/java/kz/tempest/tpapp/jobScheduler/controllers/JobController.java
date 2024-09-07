@@ -1,5 +1,6 @@
 package kz.tempest.tpapp.jobScheduler.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.tempest.tpapp.commons.annotations.access.AccessChecker;
 import kz.tempest.tpapp.commons.configs.Response;
 import kz.tempest.tpapp.commons.utils.ResponseUtil;
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/jobs")
 @RequiredArgsConstructor
+@Tag(name = "Job APIs", description = "API for jobs data")
 public class JobController {
 
     private final ScheduleRunner scheduleRunner;

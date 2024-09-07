@@ -1,5 +1,6 @@
 package kz.tempest.tpapp.commons.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.tempest.tpapp.commons.contexts.LanguageContext;
 import kz.tempest.tpapp.commons.dtos.EventInfoResponse;
 import kz.tempest.tpapp.commons.dtos.JSONResponse;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/events")
+@Tag(name = "Event APIs", description = "API for person events")
 public class EventInfoController {
     private final EventInfoService eventInfoService;
 
