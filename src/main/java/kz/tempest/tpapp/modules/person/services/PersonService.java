@@ -8,9 +8,8 @@ import kz.tempest.tpapp.commons.dtos.ResponseMessage;
 import kz.tempest.tpapp.commons.dtos.SearchFilter;
 import kz.tempest.tpapp.commons.enums.*;
 import kz.tempest.tpapp.commons.enums.Module;
-import kz.tempest.tpapp.commons.exceptions.UserExistException;
+import kz.tempest.tpapp.commons.exceptions.UserIsExistException;
 import kz.tempest.tpapp.commons.utils.EventUtil;
-import kz.tempest.tpapp.commons.utils.HttpUtil;
 import kz.tempest.tpapp.commons.utils.LogUtil;
 import kz.tempest.tpapp.commons.utils.TranslateUtil;
 import kz.tempest.tpapp.modules.person.constants.PersonMessages;
@@ -30,7 +29,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.io.IOException;
+
 import java.util.List;
 
 @Service
@@ -47,7 +46,7 @@ public class PersonService implements UserDetailsService {
         try {
             if (personRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
                 message.set(TranslateUtil.getMessage(PersonMessages.USER_EXIST), RMStatus.ERROR);
-                LogUtil.write(new UserExistException());
+                LogUtil.write(new UserIsExistException());
                 return false;
             }
             //emailService.send(ConstantsUtil.getHostName() + "/api/v1/auth/confirm/" + TokenUtil.getRefreshToken(createUserRequest.getUsername()), createUserRequest.getEmail());
