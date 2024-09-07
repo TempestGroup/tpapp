@@ -22,12 +22,19 @@ public class Response extends ResponseEntity<Object> {
         return headers;
     }
 
+    private static MultiValueMap<String, String> defaultHeaders(MultiValueMap<String, String> headers) {
+        if (!headers.containsKey(HttpHeaders.CONTENT_TYPE)) {
+            headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        }
+        return headers;
+    }
+
     public Response(HttpStatusCode status) {
-        super(status);
+        super(defaultHeaders(), status);
     }
 
     public Response(Object body, HttpStatusCode status) {
-        super(body, status);
+        super(body, defaultHeaders(), status);
     }
 
     public Response(MultiValueMap<String, String> headers, HttpStatusCode status) {
@@ -35,10 +42,10 @@ public class Response extends ResponseEntity<Object> {
     }
 
     public Response(Object body, MultiValueMap<String, String> headers, int rawStatus) {
-        super(body, headers, rawStatus);
+        super(body, defaultHeaders(headers), rawStatus);
     }
 
     public Response(Object body, MultiValueMap<String, String> headers, HttpStatusCode statusCode) {
-        super(body, headers, statusCode);
+        super(body, defaultHeaders(headers), statusCode);
     }
 }
