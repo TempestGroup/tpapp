@@ -19,7 +19,6 @@ public class ClassUtil {
     }
 
     public static String getPackage(Class<?> clazz) {
-        Package p = clazz.getPackage();
         return (clazz.getPackage() == null) ? "" : clazz.getPackage().getName();
     }
 
