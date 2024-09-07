@@ -16,7 +16,7 @@ public class Response extends ResponseEntity<Object> {
         super(body, defaultHeaders(), HttpStatus.OK);
     }
 
-    private static HttpHeaders defaultHeaders() {
+    private static MultiValueMap<String, String> defaultHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return headers;
