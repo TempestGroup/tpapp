@@ -4,6 +4,7 @@ import kz.tempest.tpapp.commons.constants.SettingKey;
 import kz.tempest.tpapp.commons.dtos.SettingResponse;
 import kz.tempest.tpapp.commons.enums.SettingType;
 import kz.tempest.tpapp.commons.models.Setting;
+import kz.tempest.tpapp.commons.utils.DateUtil;
 import kz.tempest.tpapp.commons.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,6 @@ import java.util.*;
 @Service @RequiredArgsConstructor
 public class SettingService {
     private static JdbcTemplate jdbcTemplate;
-    public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     @Autowired
     public SettingService(JdbcTemplate jdbcTemplate) {
@@ -121,7 +121,7 @@ public class SettingService {
         } else if (type.equals(SettingType.DOUBLE)) {
             return Double.valueOf(value);
         } else if (type.equals(SettingType.DATE)) {
-            return LocalDate.parse(value, formatter);
+            return LocalDate.parse(value, DateUtil.PATTERN_DASH_DD_MM_YYYY);
         } else if (type.equals(SettingType.LIST_INTEGER)) {
             value = value.replaceAll("[\\[\\]]", "");
             return Arrays.stream(value.split(",\\s*")).map(Integer::valueOf).toList();
@@ -137,7 +137,7 @@ public class SettingService {
 
     private static String getValueString(Object value) {
         if (value instanceof LocalDate) {
-            return ((LocalDate) value).format(SettingService.formatter);
+            return ((LocalDate) value).format(DateUtil.PATTERN_DASH_DD_MM_YYYY);
         }
         return String.valueOf(value);
     }

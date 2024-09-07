@@ -5,6 +5,7 @@ import kz.tempest.tpapp.commons.enums.Language;
 import kz.tempest.tpapp.commons.enums.SettingType;
 import kz.tempest.tpapp.commons.services.SettingService;
 import kz.tempest.tpapp.commons.utils.ClassUtil;
+import kz.tempest.tpapp.commons.utils.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -47,7 +48,7 @@ public class Setting {
 
     private String getValueString(Object value) {
         if (value instanceof LocalDate) {
-            return ((LocalDate) value).format(SettingService.formatter);
+            return ((LocalDate) value).format(DateUtil.PATTERN_DASH_DD_MM_YYYY);
         }
         return String.valueOf(value);
     }

@@ -40,12 +40,7 @@ public enum Month {
     }
 
     public static Month fromId (int id) {
-        try {
-            return months.get(id);
-        } catch (Exception e) {
-            LogUtil.write(e);
-            return null;
-        }
+        return months.get(id);
     }
 
     public int getId() {
