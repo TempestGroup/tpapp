@@ -7,11 +7,10 @@ import jakarta.validation.Valid;
 import kz.tempest.tpapp.commons.annotations.access.AccessChecker;
 import kz.tempest.tpapp.commons.contexts.LanguageContext;
 import kz.tempest.tpapp.commons.contexts.PersonContext;
-import kz.tempest.tpapp.commons.configs.Response;
+import kz.tempest.tpapp.commons.dtos.Response;
 import kz.tempest.tpapp.commons.dtos.JSONResponse;
 import kz.tempest.tpapp.commons.dtos.ResponseMessage;
 import kz.tempest.tpapp.commons.enums.RMStatus;
-import kz.tempest.tpapp.commons.utils.ResponseUtil;
 import kz.tempest.tpapp.commons.utils.TranslateUtil;
 import kz.tempest.tpapp.modules.person.constants.PersonMessages;
 import kz.tempest.tpapp.modules.person.dtos.LoginRequest;
@@ -47,7 +46,7 @@ public class AuthController {
         TokenResponse token = new TokenResponse(person, loginRequest.isMobile());
         response.put("message", new ResponseMessage(TranslateUtil.getMessage(PersonMessages.SUCCESSFULLY_LOGIN), RMStatus.SUCCESS));
         response.put("token", token);
-        return ResponseUtil.getResponse(response);
+        return Response.getResponse(response);
     }
 
     @ResponseBody
@@ -56,9 +55,9 @@ public class AuthController {
     public Response register(HttpServletRequest request, @Valid @ModelAttribute RegisterRequest registerRequest) {
         ResponseMessage message = new ResponseMessage();
         if (personService.register(registerRequest, message, request)) {
-            return ResponseUtil.getResponse("message", message);
+            return Response.getResponse("message", message);
         }
-        return ResponseUtil.getResponse("message",
+        return Response.getResponse("message",
             new ResponseMessage(
                 TranslateUtil.getMessage(PersonMessages.SIGN_UP_FAILED),
                 RMStatus.ERROR
@@ -70,14 +69,14 @@ public class AuthController {
     @PostMapping("/refresh")
     @AccessChecker(anonymous = false)
     public Response refreshToken(Authentication auth){
-        return ResponseUtil.getResponse("token", new TokenResponse(Person.getPerson(auth)));
+        return Response.getResponse("token", new TokenResponse(Person.getPerson(auth)));
     }
 
     @ResponseBody
     @GetMapping("/info")
     @AccessChecker(anonymous = false)
     public Response info(Authentication auth){
-        return ResponseUtil.getResponse("person", PersonResponse.from(Person.getPerson(auth), LanguageContext.getLanguage()));
+        return Response.getResponse("person", PersonResponse.from(Person.getPerson(auth), LanguageContext.getLanguage()));
     }
 
     @GetMapping("/images/{personID}")

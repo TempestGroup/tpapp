@@ -2,19 +2,15 @@ package kz.tempest.tpapp.commons.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import kz.tempest.tpapp.commons.annotations.access.AccessChecker;
-import kz.tempest.tpapp.commons.configs.Response;
+import kz.tempest.tpapp.commons.dtos.Response;
 import kz.tempest.tpapp.commons.dtos.ResponseMessage;
 import kz.tempest.tpapp.commons.enums.Language;
 import kz.tempest.tpapp.commons.models.IFile;
 import kz.tempest.tpapp.commons.services.IFileService;
-import kz.tempest.tpapp.commons.utils.ResponseUtil;
-import kz.tempest.tpapp.modules.person.enums.Role;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,7 +32,7 @@ public class IFileController {
     public Response upload(@Parameter(name = "file", description = "Uploading file with form/date") @ModelAttribute MultipartFile file) {
         ResponseMessage message = new ResponseMessage();
         fileService.save(file, message);
-        return ResponseUtil.getResponse("message", message);
+        return Response.getResponse("message", message);
     }
 
     @ResponseBody
@@ -53,7 +49,7 @@ public class IFileController {
     public Response delete(@PathVariable("fileID") IFile file, @RequestHeader(name = "Language", defaultValue = "ru") Language language) {
         ResponseMessage message = new ResponseMessage();
         fileService.delete(file, message);
-        return ResponseUtil.getResponse("message", message);
+        return Response.getResponse("message", message);
     }
 
 }

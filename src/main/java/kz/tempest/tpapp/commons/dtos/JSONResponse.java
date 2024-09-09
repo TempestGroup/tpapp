@@ -1,6 +1,5 @@
 package kz.tempest.tpapp.commons.dtos;
 
-import kz.tempest.tpapp.commons.configs.Response;
 import kz.tempest.tpapp.commons.utils.MapperUtil;
 
 import java.util.Collection;

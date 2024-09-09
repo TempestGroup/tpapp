@@ -5,11 +5,10 @@ import kz.tempest.tpapp.commons.annotations.access.AccessChecker;
 import kz.tempest.tpapp.commons.contexts.LanguageContext;
 import kz.tempest.tpapp.commons.contexts.PersonContext;
 import kz.tempest.tpapp.commons.dtos.MenuItemResponse;
-import kz.tempest.tpapp.commons.configs.Response;
+import kz.tempest.tpapp.commons.dtos.Response;
 import kz.tempest.tpapp.commons.dtos.SearchFilter;
 import kz.tempest.tpapp.commons.models.MenuItem;
 import kz.tempest.tpapp.commons.services.MenuItemService;
-import kz.tempest.tpapp.commons.utils.ResponseUtil;
 import kz.tempest.tpapp.modules.person.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -25,28 +24,28 @@ public class MenuController {
     @PostMapping("/")
     @AccessChecker(roles = { Role.ADMIN })
     public Response getMenuItems(@RequestBody SearchFilter searchFilter) {
-        return ResponseUtil.getResponse("menus", service.getMenuItems(searchFilter, LanguageContext.getLanguage()));
+        return Response.getResponse("menus", service.getMenuItems(searchFilter, LanguageContext.getLanguage()));
     }
 
     @ResponseBody
     @PostMapping("/save")
     @AccessChecker(roles = { Role.ADMIN })
     public Response saveMenuItem(@RequestBody MenuItemResponse menuItemResponse) {
-        return ResponseUtil.getResponse("message", service.saveMenuItem(menuItemResponse));
+        return Response.getResponse("message", service.saveMenuItem(menuItemResponse));
     }
 
     @ResponseBody
     @DeleteMapping("/{menuItemID}")
     @AccessChecker(roles = { Role.ADMIN })
     public Response deleteMenuItem(@PathVariable("menuItemID") MenuItem menuItem) {
-        return ResponseUtil.getResponse("message", service.deleteMenuItem(menuItem));
+        return Response.getResponse("message", service.deleteMenuItem(menuItem));
     }
 
     @ResponseBody
     @GetMapping("/person")
     @AccessChecker(anonymous = false)
     public Response getPersonMenuItems() {
-        return ResponseUtil.getResponse("menus", service.getPersonMenu(PersonContext.getCurrentPerson()));
+        return Response.getResponse("menus", service.getPersonMenu(PersonContext.getCurrentPerson()));
     }
 
 }

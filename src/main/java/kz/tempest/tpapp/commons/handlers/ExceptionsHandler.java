@@ -3,12 +3,11 @@ package kz.tempest.tpapp.commons.handlers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kz.tempest.tpapp.commons.constants.CommonMessages;
-import kz.tempest.tpapp.commons.configs.Response;
+import kz.tempest.tpapp.commons.dtos.Response;
 import kz.tempest.tpapp.commons.dtos.ResponseMessage;
 import kz.tempest.tpapp.commons.enums.RMStatus;
 import kz.tempest.tpapp.commons.exceptions.UnauthorizedException;
 import kz.tempest.tpapp.commons.utils.LogUtil;
-import kz.tempest.tpapp.commons.utils.ResponseUtil;
 import kz.tempest.tpapp.commons.utils.StringUtil;
 import kz.tempest.tpapp.commons.utils.TranslateUtil;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -73,7 +72,7 @@ public class ExceptionsHandler {
             message = new ResponseMessage(TranslateUtil.getMessage(CommonMessages.ERROR), RMStatus.ERROR);
         }
         LogUtil.write(exception);
-        return ResponseUtil.getResponse("message", message);
+        return Response.getResponse("message", message);
     }
 
 }

@@ -1,14 +1,7 @@
-package kz.tempest.tpapp.commons.configs;
+package kz.tempest.tpapp.commons.dtos;
 
-import io.jsonwebtoken.Header;
-import kz.tempest.tpapp.commons.utils.MapperUtil;
 import org.springframework.http.*;
 import org.springframework.util.MultiValueMap;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class Response extends ResponseEntity<Object> {
 
@@ -47,5 +40,21 @@ public class Response extends ResponseEntity<Object> {
 
     public Response(Object body, MultiValueMap<String, String> headers, HttpStatusCode statusCode) {
         super(body, defaultHeaders(headers), statusCode);
+    }
+
+    public static Response getResponse(Object object) {
+        return new Response(object);
+    }
+
+    public static Response getResponse(Object object, HttpStatus status){
+        return new Response(object, status);
+    }
+
+    public static Response getResponse(String key, Object object) {
+        return getResponse(JSONResponse.getResponse(key, object));
+    }
+
+    public static Response getResponse(String key, Object object, HttpStatus status) {
+        return getResponse(JSONResponse.getResponse(key, object), status);
     }
 }
