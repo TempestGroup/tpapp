@@ -37,16 +37,4 @@ public class GptConfig {
             set(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey);
         }};
     }
-
-    public Map<String, Object> getRequestBody(String prompt) {
-        return new HashMap<>() {{
-            put("model", model);
-            put("prompt", prompt);
-            put("temperature", 1);
-            put("max_tokens", 256);
-            put("top_p", 1);
-            put("frequency_penalty", 0);
-            put("presence_penalty", 0);
-        }};
-    }
 }
