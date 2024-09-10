@@ -1,21 +1,26 @@
 package kz.tempest.tpapp.integrations.email.services;
 
+import kz.tempest.tpapp.commons.utils.LogUtil;
 import kz.tempest.tpapp.integrations.email.dtos.MailMessage;
-import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class EmailService {
-    private JavaMailSender sender;
 
-    public void sendMail(MailMessage mailMessage){
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(mailMessage.getEmail());
-        message.setSubject(mailMessage.getSubject());
-        message.setText(mailMessage.getMessage());
-        sender.send(message);
+    private static JavaMailSender sender;
+
+    public EmailService(JavaMailSender sender) {
+        EmailService.sender = sender;
+    }
+
+    public static boolean send(MailMessage message) {
+        try {
+            sender.send(message.toSimpleMailMessage());
+            return true;
+        } catch (Exception e) {
+            LogUtil.write(e);
+            return false;
+        }
     }
 }
