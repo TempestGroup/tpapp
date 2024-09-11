@@ -15,10 +15,10 @@ public class TranslateUtil {
     }
 
     public static String getMessage(String code, Object... arguments) {
-        return messageSource.getMessage(code, arguments, new Locale(LanguageContext.getLanguage().name()));
+        return getMessage(LanguageContext.getLanguage(), code, arguments);
     }
 
-    public static String getSingleMessage(Language language, String code, Object... arguments) {
+    public static String getMessage(Language language, String code, Object... arguments) {
         return messageSource.getMessage(code, arguments, new Locale(language.name()));
     }
 

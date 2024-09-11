@@ -9,7 +9,9 @@ import java.util.*;
 
 public enum Module {
     PERSON("person", "Пайдаланушылар", "Пользователи", "Person"),
-    DATA("data", "Деректер", "Данные", "Data");
+    DATA("data", "Деректер", "Данные", "Data"),
+    PROJECTS("projects", "Жобалар", "Проекты", "Projects"),
+    JOBS("jobs", "Жүйелік тапсырмалар", "Системные задания", "System jobs");
 
     private final String code;
     private final String nameKK;
