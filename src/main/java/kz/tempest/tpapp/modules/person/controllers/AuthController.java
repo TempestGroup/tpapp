@@ -26,6 +26,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -68,15 +69,15 @@ public class AuthController {
     @ResponseBody
     @PostMapping("/refresh")
     @AccessChecker(anonymous = false)
-    public Response refreshToken(Authentication auth){
-        return Response.getResponse("token", new TokenResponse(Person.getPerson(auth)));
+    public Response refreshToken(){
+        return Response.getResponse("token", new TokenResponse());
     }
 
     @ResponseBody
     @GetMapping("/info")
     @AccessChecker(anonymous = false)
-    public Response info(Authentication auth){
-        return Response.getResponse("person", PersonResponse.from(Person.getPerson(auth), LanguageContext.getLanguage()));
+    public Response info(){
+        return Response.getResponse("person", PersonResponse.from(Objects.requireNonNull(PersonContext.getCurrentPerson()), LanguageContext.getLanguage()));
     }
 
     @GetMapping("/images/{personID}")
