@@ -3,13 +3,9 @@ package kz.tempest.tpapp.commons.filters;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kz.tempest.tpapp.commons.contexts.DeviceContext;
-import kz.tempest.tpapp.commons.contexts.LanguageContext;
 import kz.tempest.tpapp.commons.enums.DeviceType;
-import kz.tempest.tpapp.commons.enums.Language;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-
-import java.util.Locale;
 
 @Component
 public class DeviceFilter implements HandlerInterceptor {
