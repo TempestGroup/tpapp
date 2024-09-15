@@ -22,10 +22,10 @@ public class TokenResponse {
         this(person, false);
     }
 
-    public TokenResponse(Person person, boolean mobile) {
+    public TokenResponse(Person person, boolean withMobileToken) {
         this.refreshToken = TokenUtil.getRefreshToken(person.getUsername());
         this.accessToken = TokenUtil.getAccessToken(this.refreshToken);
-        if (mobile) {
+        if (withMobileToken) {
             this.mobileToken = TokenUtil.getMobileToken(person.getUsername());
         } else {
             this.mobileToken = "";

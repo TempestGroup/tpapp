@@ -11,5 +11,5 @@ public class LoginRequest {
     private String username;
     @Validation(message = "password_is_incorrect_in_requirements", nullable = false, min = 6)
     private String password;
-    private boolean mobile = false;
+    private boolean withMobileToken = false;
 }

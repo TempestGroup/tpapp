@@ -44,7 +44,7 @@ public class AuthController {
         JSONResponse response = new JSONResponse();
         Person person = personService.login(loginRequest, authenticationManager);
         PersonContext.setPerson(person);
-        TokenResponse token = new TokenResponse(person, loginRequest.isMobile());
+        TokenResponse token = new TokenResponse(person, loginRequest.isWithMobileToken());
         response.put("message", new ResponseMessage(TranslateUtil.getMessage(PersonMessages.SUCCESSFULLY_LOGIN), RMStatus.SUCCESS));
         response.put("token", token);
         return Response.getResponse(response);
