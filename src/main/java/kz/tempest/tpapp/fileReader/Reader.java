@@ -38,8 +38,10 @@ public abstract class Reader {
     }
 
     public static <T extends Reader> T instance(String fileFormat) {
-        return ClassUtil.cast(ClassUtil.newInstance(ReaderType.getByFormat(fileFormat).getReader()), (Class<T>) ReaderType.getByFormat(fileFormat).getReader());
+        Class<T> readerClass = (Class<T>) ReaderType.getByFormat(fileFormat).getReader();
+        return ClassUtil.newInstance(readerClass);
     }
+
 
     public abstract Object read();
 }

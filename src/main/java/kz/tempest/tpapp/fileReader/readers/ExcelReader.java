@@ -18,7 +18,6 @@ public class ExcelReader extends Reader {
                 Sheet sheet = workbook.getSheetAt(i);
                 for (Row row : sheet) {
                     Iterator<Cell> cellIterator = row.cellIterator();
-
                     List<String> rowData = new ArrayList<>();
                     while (cellIterator.hasNext()) {
                         Cell cell = cellIterator.next();
@@ -36,21 +35,25 @@ public class ExcelReader extends Reader {
 
     private String getCellValueAsString(Cell cell) {
         switch (cell.getCellType()) {
-            case STRING:
+            case STRING -> {
                 return cell.getStringCellValue();
-            case NUMERIC:
+            }
+            case NUMERIC -> {
                 if (DateUtil.isCellDateFormatted(cell)) {
                     return cell.getDateCellValue().toString();
                 } else {
                     return String.valueOf(cell.getNumericCellValue());
                 }
-            case BOOLEAN:
+            }
+            case BOOLEAN -> {
                 return String.valueOf(cell.getBooleanCellValue());
-            case FORMULA:
+            }
+            case FORMULA -> {
                 return cell.getCellFormula();
-            case BLANK:
-            default:
+            }
+            default -> {
                 return "";
+            }
         }
     }
 }

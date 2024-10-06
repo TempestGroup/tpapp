@@ -44,26 +44,34 @@ public class JsonReader extends Reader {
     private Object processValue(JsonParser parser) throws IOException {
         JsonToken token = parser.getCurrentToken();
         switch (token) {
-            case START_OBJECT:
+            case START_OBJECT -> {
                 return processNode(parser);
-            case START_ARRAY:
+            }
+            case START_ARRAY -> {
                 List<Object> list = new ArrayList<>();
                 while (parser.nextToken() != JsonToken.END_ARRAY) {
                     list.add(processValue(parser));
                 }
                 return list;
-            case VALUE_STRING:
+            }
+            case VALUE_STRING -> {
                 return parser.getText();
-            case VALUE_NUMBER_INT:
+            }
+            case VALUE_NUMBER_INT -> {
                 return parser.getIntValue();
-            case VALUE_NUMBER_FLOAT:
+            }
+            case VALUE_NUMBER_FLOAT -> {
                 return parser.getFloatValue();
-            case VALUE_TRUE:
+            }
+            case VALUE_TRUE -> {
                 return true;
-            case VALUE_FALSE:
+            }
+            case VALUE_FALSE -> {
                 return false;
-            default:
+            }
+            default -> {
                 return null;
+            }
         }
     }
 }

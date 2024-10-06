@@ -16,10 +16,9 @@ public class DocReader extends Reader {
     @Override
     public List<String> read() {
         List<String> paragraphs = new ArrayList<>();
-        Tika tika = new Tika();
-        String fileType;
         try {
-            fileType = tika.detect(bytes);
+            Tika tika = new Tika();
+            String fileType = tika.detect(bytes);
             try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes)) {
                 if ("application/msword".equals(fileType)) {
                     try (HWPFDocument doc = new HWPFDocument(bais)) {

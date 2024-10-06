@@ -10,6 +10,7 @@ import kz.tempest.tpapp.commons.dtos.SearchFilter;
 import kz.tempest.tpapp.commons.enums.Extension;
 import kz.tempest.tpapp.modules.person.dtos.PersonInformationDTO;
 import kz.tempest.tpapp.modules.person.dtos.PersonResponse;
+import kz.tempest.tpapp.modules.person.dtos.TestDTO;
 import kz.tempest.tpapp.modules.person.enums.Role;
 import kz.tempest.tpapp.modules.person.models.Person;
 import kz.tempest.tpapp.modules.person.services.PersonService;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,7 +51,16 @@ public class PersonController {
     @ResponseBody
     @GetMapping("/{personID}")
     @AccessChecker(roles = { Role.USER })
-    public Response getPerson(@PathVariable("personID") Person person) {
-        return Response.getResponse("person", PersonResponse.from(person, LanguageContext.getLanguage()));
+    public Response getPerson(@PathVariable("personID") Optional<Person> person) {
+        return person.map(value ->
+                Response.getResponse("person",
+                        PersonResponse.from(value, LanguageContext.getLanguage()))).orElse(null);
+    }
+
+    @ResponseBody
+    @PostMapping("/test")
+    public Response test(@RequestBody TestDTO testDTO) {
+        Person person = testDTO.getPerson();
+        return Response.getResponse(PersonResponse.from(person, LanguageContext.getLanguage()));
     }
 }

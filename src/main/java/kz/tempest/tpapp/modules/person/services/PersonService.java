@@ -31,6 +31,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -92,6 +93,11 @@ public class PersonService implements UserDetailsService {
     @Override
     public Person loadUserByUsername(String username) {
         return personRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Not found user with '" + username + "'!"));
+    }
+
+    public Person getById(Long id) {
+        Optional<Person> person = personRepository.findById(id);
+        return person.orElse(null);
     }
 
     public PageObject<PersonResponse> getPersons(SearchFilter filter, Person person, Language language) {
